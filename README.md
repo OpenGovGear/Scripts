@@ -5,7 +5,7 @@ Collection of Scripts for install and setup of CKAN
 
 
 
-<h3>Running Scripts on new instance</h3>
+<h3>Running Scripts on a New Instance</h3>
 
 sudo apt-get install git
 
