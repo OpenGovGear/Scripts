@@ -17,7 +17,7 @@ read dbserv
 
 #Make source directory
 
-sudo cp -r /usr/lib/ckan/default /usr/lib/ckan/${orgName}
+cp -r /usr/lib/ckan/default /usr/lib/ckan/${orgName}
 
 
 #Make database
@@ -29,14 +29,14 @@ sudo -u postgres createdb -O ${orgName}_guy ${orgName}_cat -E utf-8
 
 #Make configuration directory
 
-sudo mkdir -p /etc/ckan/${orgName}
-sudo chown -R `whoami` /etc/ckan/
+mkdir -p /etc/ckan/${orgName}
+chown -R `whoami` /etc/ckan/
 
 
 #Make storage directory
 
-sudo mkdir -p /var/lib/ckan/${orgName}/storage
-sudo chmod 777 /var/lib/ckan/${orgName}/storage
+mkdir -p /var/lib/ckan/${orgName}/storage
+chmod 777 /var/lib/ckan/${orgName}/storage
 
 
 #Make configuration file
@@ -49,13 +49,13 @@ paster make-config ckan /etc/ckan/${orgName}/development.ini
 #Setup solr
 
 cd /etc/default
-sudo sed -i 's/NO_START=1/NO_START=0/' jetty
-sudo sed -i 's/#JETTY_HOST=/JETTY_HOST=127.0.0.1 #/' jetty
-sudo sed -i 's/#JETTY_PORT=8080/JETTY_PORT=8983/' jetty
-sudo sed -i 's/#JAVA_HOME=/JAVA_HOME=\/usr\/lib\/jvm\/java-6-openjdk-amd64\//' jetty
-sudo mv /etc/solr/conf/schema.xml /etc/solr/conf/schema.xml.bak
-sudo ln -s /usr/lib/ckan/${orgName}/src/ckan/ckan/config/solr/schema.xml /etc/solr/conf/schema.xml
-sudo service jetty start
+sed -i 's/NO_START=1/NO_START=0/' jetty
+sed -i 's/#JETTY_HOST=/JETTY_HOST=127.0.0.1 #/' jetty
+sed -i 's/#JETTY_PORT=8080/JETTY_PORT=8983/' jetty
+sed -i 's/#JAVA_HOME=/JAVA_HOME=\/usr\/lib\/jvm\/java-6-openjdk-amd64\//' jetty
+mv /etc/solr/conf/schema.xml /etc/solr/conf/schema.xml.bak
+ln -s /usr/lib/ckan/${orgName}/src/ckan/ckan/config/solr/schema.xml /etc/solr/conf/schema.xml
+service jetty start
 
 
 #Apply configurations
@@ -64,11 +64,11 @@ cd /etc/ckan/${orgName}
 sed -i s/ckan_default/${orgName}_guy/ development.ini
 sed -i s/pass/capstone/ development.ini
 sed -i s/ckan_default/${orgName}_cat/ development.ini
-sudo sed -i 's/#solr_url/solr_url/' development.ini
+sed -i 's/#solr_url/solr_url/' development.ini
 #sudo sed -i s/ckan\.site_url=/ckan\.site_url = http:\/\/${hostIP}/ development.ini 
-sudo sed -i s/CKAN/${orgName}/ development.ini 
-sudo sed -i 's/#ckan\.storage_path/ckan\.storage_path/' development.ini
-sudo sed -i s_/var/lib/ckan_/var/lib/ckan/${orgName}_ development.ini
+sed -i s/CKAN/${orgName}/ development.ini 
+sed -i 's/#ckan\.storage_path/ckan\.storage_path/' development.ini
+sed -i s_/var/lib/ckan_/var/lib/ckan/${orgName}_ development.ini
 
 
 #Initialize DB tables
