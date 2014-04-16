@@ -1,0 +1,6 @@
+echo "Enter the three letter volume identifier:"
+read volID
+
+sudo mkfs -t ext4 /dev/${volID}
+sudo mkdir /FILESTORE
+sudo mount /dev/${volID} /FILESTORE

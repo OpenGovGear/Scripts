@@ -1,0 +1,33 @@
+#/usr/bin/env bash
+
+#This script runs on the staging server once the client if
+#ready to go into prod. It creates a production.ini file, a 
+#database dump file, and loads them as well as any custom plug-ins
+#to git, where they'll be launched into production. The image must have
+#GIT installed, and either pre-configured with the ID and password of 
+#the GIT admin, or this script can identify that user, but credential 
+#helper must be there
+
+#question: how to set git up on this server as well as on remote server to 
+#enable the required interaction? 
+
+echo 'Enter the client name:'
+read orgName
+
+#TO-DO
+create a git repository connected to OpenGovGear somehow
+
+#Dump database and move dump file to local git repository
+. /usr/lib/ckan/default/bin/activate
+cd /usr/lib/ckan/default/src/ckan 
+paster db dump -c /etc/ckan/${orgName}/development.ini ${orgName}_dbdump.sql
+
+#TO-DO 
+#Create production.ini file and move to git file
+cp /etc/ckan/${orgName}/development.ini /etc/ckan/${}/production.ini
+
+#TO-DO
+#move any custom plugins to git repository
+
+#TO-DO
+#commit files to remote git repository
