@@ -1,5 +1,7 @@
 #!/usr/bin/env bash
 
+#Configure
+
 echo "Enter client organization's name:"
 read orgName
 
@@ -12,45 +14,76 @@ read hostIP
 echo "Enter the database ip address:"
 read dbserv
 
-sudo cp -r /usr/lib/ckan/default /usr/lib/ckan/${orgName}
+
+#Make source directory
+
+cp -r /usr/lib/ckan/default /usr/lib/ckan/${orgName}
+
+
+#Make database
+
 sudo -u postgres createuser -S -D -R ${orgName}_guy
 sudo -u postgres psql -U postgres -d postgres -c "alter user ${orgName}_guy with password 'capstone';"
 sudo -u postgres createdb -O ${orgName}_guy ${orgName}_cat -E utf-8
-sudo mkdir -p /etc/ckan/${orgName}
-sudo chown -R `whoami` /etc/ckan/
+
+
+#Make configuration directory
+
+mkdir -p /etc/ckan/${orgName}
+chown -R `whoami` /etc/ckan/
+
+
+#Make storage directory
+
+mkdir -p /var/lib/ckan/${orgName}/storage
+chmod 777 /var/lib/ckan/${orgName}/storage
+
+
+#Make configuration file
+
 cd /usr/lib/ckan/${orgName}/src/ckan
 . /usr/lib/ckan/${orgName}/bin/activate
 paster make-config ckan /etc/ckan/${orgName}/development.ini
+
+
+#Setup solr
+
+cd /etc/default
+sed -i 's/NO_START=1/NO_START=0/' jetty
+sed -i 's/#JETTY_HOST=/JETTY_HOST=127.0.0.1 #/' jetty
+sed -i 's/#JETTY_PORT=8080/JETTY_PORT=8983/' jetty
+sed -i 's/#JAVA_HOME=/JAVA_HOME=\/usr\/lib\/jvm\/java-6-openjdk-amd64\//' jetty
+mv /etc/solr/conf/schema.xml /etc/solr/conf/schema.xml.bak
+ln -s /usr/lib/ckan/${orgName}/src/ckan/ckan/config/solr/schema.xml /etc/solr/conf/schema.xml
+service jetty start
+
+
+#Apply configurations
+
 cd /etc/ckan/${orgName}
 sed -i s/ckan_default/${orgName}_guy/ development.ini
 sed -i s/pass/capstone/ development.ini
 sed -i s/ckan_default/${orgName}_cat/ development.ini
-cd /etc/default
-sudo sed -i 's/NO_START=1/NO_START=0/' jetty
-sudo sed -i 's/#JETTY_HOST=/JETTY_HOST=127.0.0.1 #/' jetty
-sudo sed -i 's/#JETTY_PORT=8080/JETTY_PORT=8983/' jetty
-sudo sed -i 's/#JAVA_HOME=/JAVA_HOME=\/usr\/lib\/jvm\/java-6-openjdk-amd64\//' jetty
-
-sudo mv /etc/solr/conf/schema.xml /etc/solr/conf/schema.xml.bak
-sudo ln -s /usr/lib/ckan/${orgName}/src/ckan/ckan/config/solr/schema.xml /etc/solr/conf/schema.xml
-sudo service jetty start
-cd /etc/ckan/${orgName}
-sudo sed -i 's/#solr_url/solr_url/' development.ini
-
-
-#you need to change this line to your ip address
-#you need to change this line to your ip address
+sed -i 's/#solr_url/solr_url/' development.ini
 #sudo sed -i s/ckan\.site_url=/ckan\.site_url = http:\/\/${hostIP}/ development.ini 
-sudo sed -i s/CKAN/${orgName}/ development.ini 
+sed -i s/CKAN/${orgName}/ development.ini 
+sed -i 's/#ckan\.storage_path/ckan\.storage_path/' development.ini
+sed -i s_/var/lib/ckan_/var/lib/ckan/${orgName}_ development.ini
+
+
+#Initialize DB tables
 
 cd /usr/lib/ckan/${orgName}/src/ckan
 paster db init -c /etc/ckan/${orgName}/development.ini
-sudo mkdir -p /var/lib/ckan/${orgName}/storage
-sudo chmod 777 /var/lib/ckan/${orgName}/storage
-cd /etc/ckan/${orgName}
-sudo sed -i 's/#ckan\.storage_path/ckan\.storage_path/' development.ini
-sudo sed -i s_/var/lib/ckan_/var/lib/ckan/${orgName}_ development.ini
 
+
+#Copy who.ini file
+
+cd /etc/ckan/${orgName}
 ln -s /usr/lib/ckan/${orgName}/src/ckan/who.ini /etc/ckan/${orgName}/who.ini
+
+
+#Serve instance
+
 cd /usr/lib/ckan/${orgName}/src/ckan
 paster serve /etc/ckan/${orgName}/development.ini
