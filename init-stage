@@ -5,13 +5,15 @@
 #the config file, establish a database schema, mount a filestore, prep 
 #plugins as part of new client staging
 
+#enable locate command
+sudo updatedb
 
 #set timezone
 echo "US/Pacific" | sudo tee /etc/timezone
 sudo dpkg-reconfigure --frontend noninteractive tzdata
 
 #For time correction
-sudo apt-get install ntp
+sudo apt-get -y install ntp
 sudo service ntp status
 
 #Make sure logging uses the right time too

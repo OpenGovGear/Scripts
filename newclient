@@ -16,7 +16,7 @@
 echo "Enter the three letter volume identifier(n if you don't know):"
 read volID
 
-if [${volID} = "n" ] #give user an out if they don't have the dev id
+if [ ${volID} = "n" ] #give user an out if they don't have the dev id
 then
 	echo 'Run sudo fdisk -l to view attached devices'
 	exit 1
@@ -26,7 +26,7 @@ fi
 #that doesn't need formatting
 echo "Does the volume require formatting(y/n)?"
 read reqfrmt
-if [${reqfrmt} = "y" ]
+if [ ${reqfrmt} = "y" ]
 then
 	sudo mkfs -t ext4 /dev/${volID}
 	echo 'Formatting device $volID as ext4'
@@ -43,9 +43,6 @@ read orgName
 echo "Enter this machine's floating ip address:"
 read hostIP
 
-echo "Enter the database servers subnet ip address:"
-read dbserv
-
 #create this client's directory trees from default
 sudo cp -r /etc/ckan/default /etc/ckan/${orgName}
 sudo cp -r /usr/lib/ckan/default /usr/lib/ckan/${orgName}
@@ -54,14 +51,14 @@ sudo ln -s /usr/lib/ckan/${orgName}/src/ckan/ckan/config/solr/schema.xml /etc/so
 
 #customize development.ini configuration
 cd /etc/ckan/${orgName}
-sed -i s/ckan_default/${orgName}/ development.ini #user for postgres connection
-sed -i s/pass/capstone/ development.ini #password for postgres connection
-sed -i s/ckan_default/${orgName}_ctlg/ development.ini #table schema
+sudo sed -i s/ckan_default/${orgName}/ development.ini #user for postgres connection
+sudo sed -i s/pass/capstone/ development.ini #password for postgres connection
+sudo sed -i s/ckan_default/${orgName}_ctlg/ development.ini #table schema
 #sudo sed -i s/ckan\.site_url=/ckan\.site_url = http:\/\/${hostIP}/ development.ini #this command doesn't work
 sudo sed -i s/CKAN/${orgName}/ development.ini #site_title wish we could make it all caps or capinit
 sudo sed -i 's/#solr_url/solr_url/' /etc/ckan/default/development.ini #activate solr
 sudo sed -i 's/#ckan\.storage_path/ckan\.storage_path/' development.ini #activate file store
-sudo sed -i s_/var/lib/ckan_/var/lib/ckan/${orgName}_ development.ini #set file store location
+sudo sed -i s_/var/lib/ckan_/FSTORE/${orgName}_ development.ini #set file store location
 
 #initialise file store
 sudo mkdir -p /FSTORE/${orgName}
@@ -81,6 +78,8 @@ sudo -u postgres createdb -O ${orgName} ${orgName}_ctlg -E utf-8
 cd /usr/lib/ckan/${orgName}/src/ckan
 . /usr/lib/ckan/default/bin/activate
 paster db init -c /etc/ckan/${orgName}/development.ini
+
+#serve client on port 5000
 paster serve /etc/ckan/${orgName}/development.ini
 
 
