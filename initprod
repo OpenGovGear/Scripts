@@ -1,25 +1,77 @@
 #!/bin/bash
-#Ckan Install V2
-# 
-# 
 
-#sudo apt-get update
-#sudo apt-get install -y python-dev postgresql libpq-dev python-pip python-virtualenv git-core solr-jetty openjdk-6-jdk
-#sudo mkdir -p /usr/lib/ckan/default
-#sudo chown `whoami` /usr/lib/ckan/default
-#virtualenv /usr/lib/ckan/default
+#This script is just to create a simulated production context in 
+#which launchclient will send a client into production. It create 
+#the ckan src is already installed and the default development.ini
+#file as well, but none of the necessary configurations have taken
+#place,  solr has not been started and who.ini has not been linked
+#these have to be dealt with now on a multitenant machine 
+
+#Check whether we're using a volume copied from prod
+#that doesn't need formatting
+#Mount external filestore
+echo "Enter the three letter device identifier for the volume to mount (n if you don't know):"
+read volID
+
+if [ ${volID} = "n" ] #give user an out if they don't have the dev id
+then
+	echo 'Run sudo fdisk -l to view attached devices'
+	exit 1
+fi
+
+#Check whether we're using a volume copied from prod
+#that doesn't need formatting
+echo "Does the volume require formatting(y/n)?"
+read reqfrmt
+if [ ${reqfrmt} = "y" ]
+then
+	sudo mkfs -t ext4 /dev/${volID}
+	echo 'Formatting device $volID as ext4'
+fi
+
+#mount the volume
+sudo mkdir /FSTORE
+sudo mount /dev/${volID} /FSTORE
+
+echo "Have you created the ckan_default database user and schema with password on the database server?(y/n)"
+read confirmdb
+if [ ${confirmdb} = "n" ]
+then
+	echo 'Please create the database user, schema and password on the database server before continuing.'
+	exit 1
+fi
+
+echo "Enter the local subnet fixed ip for the database server: (n if unknown)"
+read $dbserv
+if [ ${dbserv} = "n" ]
+then
+	echo "Please confirm the database server's fixed ip before continuing."
+	exit 1
+fi
+
+#Install apache and nginx
+sudo apt-get install -y apache2 libapache2-mod-wsgi nginx
+
+#TO-DO HOW TO INSTALL POSTFIX FROM COMMAND LINE AND CONFIGURE
+
+
+#Put nginx and apache configuration files in place
+sudo cp ./ogg-proxy /etc/nginx/sites-available/.
+sudo ln /etc/nginx/sites-available/ogg-proxy /etc/nginx/sites-enabled/ogg-proxy
+sudo rm /etc/nginx/sites-enabled/default
+
+sudo cp ./ckan_default /etc/apache2/sites-available/. 
+sudo sed 's/80/8080/' /etc/apache2/ports.conf
+
+#TO-DO 
+#The following database setup must either be done in advance on the 
+#database server, or find commands to do them remotely 
 #. /usr/lib/ckan/default/bin/activate
-#pip install -e 'git+https://github.com/ckan/ckan.git@ckan-2.2#egg=ckan'
-#pip install -r /usr/lib/ckan/default/src/ckan/requirements.txt
-#deactivate
-. /usr/lib/ckan/default/bin/activate
-sudo -u postgres createuser -S -D -R ckan_default
-sudo -u postgres psql -U postgres -d postgres -c "alter user ckan_default with password 'capstone';"
-sudo -u postgres createdb -O ckan_default ckan_default -E utf-8
-sudo mkdir -p /etc/ckan/default
-sudo chown -R `whoami` /etc/ckan/
-cd /usr/lib/ckan/default/src/ckan
-paster make-config ckan /etc/ckan/default/development.ini
+#sudo -u postgres createuser -S -D -R ckan_default
+#sudo -u postgres psql -U postgres -d postgres -c "alter user ckan_default with password 'capstone';"
+#sudo -u postgres createdb -O ckan_default ckan_default -E utf-8
+
+#configure default ckan instance
 cd /etc/ckan/default
 sed -i 's/pass/capstone/' development.ini
 cd /etc/default
