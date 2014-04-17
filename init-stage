@@ -43,6 +43,3 @@ sudo chown -R `whoami` /etc/ckan/
 cd /usr/lib/ckan/default/src/ckan
 paster make-config ckan /etc/ckan/default/development.ini
 
-#TO-DO either here or in newclient, setup git so that you just have to log
-#in once and then your credential is set up for your next interaction with
-#remote server
