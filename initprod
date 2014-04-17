@@ -70,7 +70,7 @@ sudo ln -s /usr/lib/ckan/default/src/ckan/ckan/config/solr/schema.xml /etc/solr/
 cd /etc/ckan/default
 #sudo sed -i "s/ckan_default/ckan_default/" development.ini #user for postgres connection
 sudo sed -i "s/pass\@localhost/capstone\@${dbserv}/" development.ini #password for postgres connection
-sudo sed -i "s/ckan_default/ckan_default_db/2" development.ini #table schema
+sudo sed -i "s/ckan_default/ckan_default_db?sslmode=disable/2" development.ini #table schema
 #sudo sed -i "s/ckan.site_url =/ckan.site_url = http:\/\/${hostIP}/ development.ini" 
 #sudo sed -i "s/CKAN/ckan_default/ development.ini" #site_title wish we could make it all caps or capinit
 sudo sed -i "s/#solr_url/solr_url/" /etc/ckan/default/development.ini #activate solr
