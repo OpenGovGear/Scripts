@@ -88,13 +88,10 @@ sudo mv /etc/solr/conf/schema.xml /etc/solr/conf/schema.xml.bak
 sudo ln -s /usr/lib/ckan/default/src/ckan/ckan/config/solr/schema.xml /etc/solr/conf/schema.xml
 sudo service jetty start
 
-#create client database user, password and schema and initialise db
-sudo -u postgres createuser -S -D -R ckan_default
-sudo -u postgres psql -U postgres -d postgres -c "alter user ckan_default with password 'capstone';"
-sudo -u postgres createdb -O ckan_default ckan_default_db -E utf-8
+#initialise db
 cd /usr/lib/ckan/default/src/ckan
 . /usr/lib/ckan/default/bin/activate
-paster db init -c /etc/ckan/ckan_default/development.ini
+paster db init -c /etc/ckan/default/development.ini
 
 cd /usr/lib/ckan/default/src/ckan
 sudo cp /etc/ckan/default/development.ini /etc/ckan/default/production.ini
