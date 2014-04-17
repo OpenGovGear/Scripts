@@ -42,7 +42,7 @@ then
 fi
 
 echo "Enter the local subnet fixed ip for the database server: (n if unknown)"
-read $dbserv
+read dbserv
 if [ ${dbserv} = "n" ]
 then
 	echo "Please confirm the database server's fixed ip before continuing."
@@ -62,14 +62,13 @@ sudo rm /etc/nginx/sites-enabled/default
 
 sudo sed -i 's/80/8080/' /etc/apache2/ports.conf
 sudo cp ./ckan_default /etc/apache2/sites-available/. 
-sudo ln -s /usr/lib/ckan/default/src/ckan/who.ini /etc/ckan/ckan_default/who.ini
+sudo ln -s /usr/lib/ckan/default/src/ckan/who.ini /etc/ckan/default/who.ini
 sudo ln -s /usr/lib/ckan/default/src/ckan/ckan/config/solr/schema.xml /etc/solr/conf/schema.xml #TO-DO maybe change this to work with multicore solr
 
 #customize development.ini configuration
 cd /etc/ckan/default
 #sudo sed -i "s/ckan_default/ckan_default/" development.ini #user for postgres connection
-sudo sed -i "s/pass/capstone/" development.ini #password for postgres connection
-sudo sed -i "s_@localhost/_@${dbserv}/_" development.ini #password for postgres connection
+sudo sed -i "s/pass\@localhost/capstone\@${dbserv}/" development.ini #password for postgres connection
 sudo sed -i "s/ckan_default/ckan_default_db/2" development.ini #table schema
 #sudo sed -i "s/ckan.site_url =/ckan.site_url = http:\/\/${hostIP}/ development.ini" 
 #sudo sed -i "s/CKAN/ckan_default/ development.ini" #site_title wish we could make it all caps or capinit
