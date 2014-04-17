@@ -31,3 +31,6 @@ cp /etc/ckan/${orgName}/development.ini /etc/ckan/${}/production.ini
 
 #TO-DO
 #commit files to remote git repository
+
+#Change ownership of file store to www-data
+sudo chown -r www-data /FSTORE/${orgName}
