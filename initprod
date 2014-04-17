@@ -60,53 +60,45 @@ sudo cp ./ogg-proxy /etc/nginx/sites-available/.
 sudo ln /etc/nginx/sites-available/ogg-proxy /etc/nginx/sites-enabled/ogg-proxy
 sudo rm /etc/nginx/sites-enabled/default
 
-sudo cp ./ckan_default /etc/apache2/sites-available/. 
 sudo sed 's/80/8080/' /etc/apache2/ports.conf
+sudo cp ./ckan_default /etc/apache2/sites-available/. 
+sudo ln -s /usr/lib/ckan/ckan_default/src/ckan/who.ini /etc/ckan/ckan_default/who.ini
+sudo ln -s /usr/lib/ckan/ckan_default/src/ckan/ckan/config/solr/schema.xml /etc/solr/conf/schema.xml #TO-DO maybe change this to work with multicore solr
 
-#TO-DO 
-#The following database setup must either be done in advance on the 
-#database server, or find commands to do them remotely 
-#. /usr/lib/ckan/default/bin/activate
-#sudo -u postgres createuser -S -D -R ckan_default
-#sudo -u postgres psql -U postgres -d postgres -c "alter user ckan_default with password 'capstone';"
-#sudo -u postgres createdb -O ckan_default ckan_default -E utf-8
+#customize development.ini configuration
+cd /etc/ckan/ckan_default
+sudo sed -i s/ckan_default/ckan_default/ development.ini #user for postgres connection
+sudo sed -i s/pass/capstone/ development.ini #password for postgres connection
+sudo sed -i s_@localhost/_@${dbserv}/_ development.ini #password for postgres connection
+sudo sed -i s/ckan_default/ckan_default_db/ development.ini #table schema
+#sudo sed -i s/ckan\.site_url=/ckan\.site_url = http:\/\/${hostIP}/ development.ini #this command doesn't work
+sudo sed -i s/CKAN/ckan_default/ development.ini #site_title wish we could make it all caps or capinit
+sudo sed -i 's/#solr_url/solr_url/' /etc/ckan/default/development.ini #activate solr
+sudo sed -i 's/#ckan\.storage_path/ckan\.storage_path/' development.ini #activate file store
+sudo sed -i s_/var/lib/ckan_/FSTORE/ckan_default_ development.ini #set file store location
 
-#configure default ckan instance
-cd /etc/ckan/default
-sed -i 's/pass/capstone/' development.ini
-cd /etc/default
-sudo sed -i 's/NO_START=1/NO_START=0/' jetty
-sudo sed -i 's/#JETTY_HOST=/JETTY_HOST=127.0.0.1 #/' jetty
-sudo sed -i 's/#JETTY_PORT=8080/JETTY_PORT=8983/' jetty
-sudo sed -i 's/#JAVA_HOME=/JAVA_HOME=\/usr\/lib\/jvm\/java-6-openjdk-amd64\//' jetty
+#initialise file store
+sudo mkdir -p /FSTORE/ckan_default
+sudo chown `whoami` /FSTORE/ckan_default #paster runs under the id of 
+					#whatever user started it
+sudo chmod u+rwx /FSTORE/ckan_default #because the user guide says so
 
+#enable CKAN solr search platform on jetty and start
 sudo mv /etc/solr/conf/schema.xml /etc/solr/conf/schema.xml.bak
 sudo ln -s /usr/lib/ckan/default/src/ckan/ckan/config/solr/schema.xml /etc/solr/conf/schema.xml
 sudo service jetty start
-cd /etc/ckan/default
-sudo sed -i 's/#solr_url/solr_url/' development.ini
 
-
-#you need to change this line to your ip address
-#sudo sed -i 's/ckan\.site_url=/ckan\.site_url = http://54.187.59.131/' development.ini 
-
+#create client database user, password and schema and initialise db
+sudo -u postgres createuser -S -D -R ckan_default
+sudo -u postgres psql -U postgres -d postgres -c "alter user ckan_default with password 'capstone';"
+sudo -u postgres createdb -O ckan_default ckan_default_db -E utf-8
+cd /usr/lib/ckan/ckan_default/src/ckan
+. /usr/lib/ckan/default/bin/activate
+paster db init -c /etc/ckan/ckan_default/development.ini
 
 cd /usr/lib/ckan/default/src/ckan
-paster db init -c /etc/ckan/default/development.ini
-#paster sysadmin add ogg-one -c /etc/ckan/default/development.ini
-
-sudo mkdir -p /var/lib/ckan/default
-sudo chown www-data /var/lib/ckan/default
-sudo chmod u+rwx /var/lib/ckan/default
-
-cd /etc/ckan/default
-sudo sed -i 's/#ckan\.storage_path/ckan\.storage_path/' development.ini
-sudo sed -i 's/\/var\/lib\/ckan/\/var\/lib\/ckan\/default/' development.ini
-
-ln -s /usr/lib/ckan/default/src/ckan/who.ini /etc/ckan/default/who.ini
-cd /usr/lib/ckan/default/src/ckan
-#paster serve /etc/ckan/default/development.ini
 sudo cp /etc/ckan/default/development.ini /etc/ckan/default/production.ini
+
 sudo a2ensite ckan_default
 sudo service apache2 start
 sudo service nginx reload
