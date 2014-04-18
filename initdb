@@ -44,11 +44,11 @@ sudo sed -i "s/#listen_addresses = 'localhost'/listen_addresses = '*'/" postgres
 sudo sed -i "s/127.0.0.1/${ckanIP}/" pg_hba.conf
 
 sudo sed -i "s/RSAAuthentication yes/RSAAuthentication no/" /etc/ssh/sshd_config
-sudo sed -i "s/PublickeyAuthentication yes/PublickeyAuthentication no/" /etc/ssh/sshd_config
+sudo sed -i "s/PubkeyAuthentication yes/PubkeyAuthentication no/" /etc/ssh/sshd_config
 sudo sed -i "s/PasswordAuthentication no/PasswordAuthentication yes/" /etc/ssh/sshd_config
 
 #restart postgresand ssh
-sudo service postgresql reload
-sudo service ssh reload
+sudo service postgresql restart
+sudo service ssh restart
 
 sudo passwd ubuntu
