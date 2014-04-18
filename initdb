@@ -10,22 +10,38 @@
 
 #The script must ask for the internal subnet ip address to receive db requests from and puts an entry in pg_hpa.conf as well as postgresql.conf, and restarts postgres to make the changes effective
 
-#does the image this script runs on have to have ssl disabled?
+echo "Enter the subnet IP address of the main CKAN server:(n if you don't know)"
+read ckanIP
+if [ ${ckanIP} = "n" ] #give user an out if they don't have the dev id
+then
+	echo 'Please check CKAN server subnet IP and try again.'
+	exit 1
+fi
 
-echo "Enter the subnet IP address of the main CKAN server:"
-read $ckanIP
+#enable locate command
+sudo updatedb
+
+#set timezone
+echo "US/Pacific" | sudo tee /etc/timezone
+sudo dpkg-reconfigure --frontend noninteractive tzdata
+
+#For time correction
+sudo apt-get install -y ntp
+sudo service ntp status
+
+#Make sure logging uses the right time too
+sudo service rsyslog restart
+
+#install CKAN dependencies
+sudo apt-get install -y postgresql libpq-dev
 
 #sed command to make postgresql.conf listen to all ip addresses
 cd /etc/postgresql/*/main
-sudo sed s/#listen_addresses = 'localhost'/listen_addresses = '*'/ postgresql.conf
+sudo sed -i "s/#listen_addresses = 'localhost'/listen_addresses = '*'/" postgresql.conf
 
-#TO-DO
-#sed command to put an entry into pg_hpa.conf,
-#or if not feasible (should be feasible), split the file
-#where the new entry ought to be, and use cat to assemble
-#it all together around the required entry 
+#sed command to set password authentication for ckan server
 
-#sed s/// pg_hpa.conf
+sudo sed -i "s/127.0.0.1/${ckanIP}/" pg_hba.conf
 
 #restart postgres
-sudo service postgres reload
+sudo service postgresql reload
