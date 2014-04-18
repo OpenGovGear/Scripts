@@ -56,6 +56,7 @@ sudo apt-get install -y apache2 libapache2-mod-wsgi nginx
 
 
 #Put nginx and apache configuration files in place
+sudo cp ./apache.wsgi /etc/ckan/default/.
 sudo cp ./ogg-proxy /etc/nginx/sites-available/.
 sudo ln /etc/nginx/sites-available/ogg-proxy /etc/nginx/sites-enabled/ogg-proxy
 sudo rm /etc/nginx/sites-enabled/default
