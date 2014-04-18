@@ -80,7 +80,7 @@ sudo sed -i "s_/var/lib/ckan_/FSTORE/ckan\_default_" development.ini #set file s
 
 #initialise file store
 sudo mkdir -p /FSTORE/ckan_default
-sudo chown `whoami` /FSTORE/ckan_default #paster runs under the id of 
+sudo chown -R www-data /FSTORE/ckan_default #paster runs under the id of 
 					#whatever user started it
 sudo chmod u+rwx /FSTORE/ckan_default #because the user guide says so
 
