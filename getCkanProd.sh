@@ -69,20 +69,19 @@ sudo ln -s /usr/lib/ckan/default/src/ckan/ckan/config/solr/schema.xml /etc/solr/
 
 #customize development.ini configuration
 cd /etc/ckan/default
-#sudo sed -i "s/ckan_default/ckan_default/" development.ini #user for postgres connection
+#sudo sed -i "s/ckan_default/ckan_default/" development.ini #commented out best way to leave as default user
 sudo sed -i "s/pass\@localhost/capstone\@${dbserv}/" development.ini #password for postgres connection
-sudo sed -i "s/ckan_default/ckan_default_db?sslmode=disable/2" development.ini #table schema
+sudo sed -i "s/ckan_default/ckan_default_db?sslmode=disable/2" development.ini #table schema name
 #sudo sed -i "s/ckan.site_url =/ckan.site_url = http:\/\/${hostIP}/ development.ini" 
-#sudo sed -i "s/CKAN/ckan_default/ development.ini" #site_title wish we could make it all caps or capinit
+sudo sed -i "s/CKAN/DEMO/ development.ini" #Site title
 sudo sed -i "s/#solr_url/solr_url/" /etc/ckan/default/development.ini #activate solr
 sudo sed -i "s/#ckan.storage_path/ckan.storage_path/" development.ini #activate file store
 sudo sed -i "s_/var/lib/ckan_/FSTORE/ckan\_default_" development.ini #set file store location
 
 #initialise file store
 sudo mkdir -p /FSTORE/ckan_default
-sudo chown -R www-data /FSTORE/ckan_default #paster runs under the id of 
-					#whatever user started it
-sudo chmod u+rwx /FSTORE/ckan_default #because the user guide says so
+sudo chown -R www-data /FSTORE/ckan_default #apache user must have permissions over file store 
+sudo chmod u+rwx /FSTORE/ckan_default #maintainer's guide says to use this command
 
 #enable CKAN solr search platform on jetty and start
 sudo mv /etc/solr/conf/schema.xml /etc/solr/conf/schema.xml.bak
