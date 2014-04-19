@@ -1,4 +1,3 @@
-
 #This script starts it all. Creates a server with CKAN src, default 
 #config and all dependancies, and starts solr on jetty. Doesn't create 
 #database. The image created with this script will be ready to customize
