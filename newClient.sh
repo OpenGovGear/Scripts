@@ -83,7 +83,7 @@ sudo service jetty start
 #create client database user, password and schema and initialise db
 sudo -u postgres createuser -S -D -R ${orgName}
 sudo -u postgres psql -U postgres -d postgres -c "alter user ${orgName} with password 'capstone';"
-sudo -u postgres createdb -O ${orgName} ${orgName}_ctlg -E utf-8
+sudo -u postgres createdb -O ${orgName} ${orgName}_db -E utf-8
 cd /usr/lib/ckan/${orgName}/src/ckan
 . /usr/lib/ckan/${orgName}/bin/activate
 paster db init -c /etc/ckan/${orgName}/development.ini
