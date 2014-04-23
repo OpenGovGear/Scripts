@@ -7,6 +7,7 @@ Collection of Scripts for install and setup of CKAN
 
 <h3>Running Scripts on a New Instance</h3>
 
+sudo apt-get update
 sudo apt-get install git
 
 Copy the https clone. Example: https://github.com/OpenGovGear/Scripts.git
