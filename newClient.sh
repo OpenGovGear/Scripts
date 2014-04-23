@@ -36,6 +36,16 @@
 #sudo mkdir /FSTORE
 #sudo mount /dev/${volID} /FSTORE
 
+echo Enter your user name for git:
+read user
+
+echo 'Enter your email address for git:'
+read mail
+
+git config --global user.name "${user}"
+git config --global user.email "${mail}"
+#git config --global credential.helper store #nice if you want to not have to put password in when you interact with git
+
 #Get all required details about this deployment
 echo "Enter client organization's name:"
 read orgName
