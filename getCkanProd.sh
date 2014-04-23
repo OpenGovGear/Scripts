@@ -1,37 +1,37 @@
 #!/bin/bash
 
-#This script is just to create a simulated production context in 
-#which launchclient will send a client into production. It create 
+#This script creates a production context in 
+#which launchclient will send a client into production.  
 #the ckan src is already installed and the default development.ini
 #file as well, but none of the necessary configurations have taken
 #place,  solr has not been started and who.ini has not been linked
-#these have to be dealt with now on a multitenant machine 
+ 
 
 #Check whether we're using a volume copied from prod
 #that doesn't need formatting
 #Mount external filestore
-echo "Enter the three letter device identifier for the volume to mount (n if you don't know):"
-read volID
+#echo "Enter the three letter device identifier for the volume to mount (n if you don't know):"
+#read volID
 
-if [ ${volID} = "n" ] #give user an out if they don't have the dev id
-then
-	echo 'Run sudo fdisk -l to view attached devices'
-	exit 1
-fi
+#if [ ${volID} = "n" ] #give user an out if they don't have the dev id
+#then
+#	echo 'Run sudo fdisk -l to view attached devices'
+#	exit 1
+#fi
 
 #Check whether we're using a volume copied from prod
 #that doesn't need formatting
-echo "Does the volume require formatting(y/n)?"
-read reqfrmt
-if [ ${reqfrmt} = "y" ]
-then
-	sudo mkfs -t ext4 /dev/${volID}
-	echo 'Formatting device $volID as ext4'
-fi
+#echo "Does the volume require formatting(y/n)?"
+#read reqfrmt
+#if [ ${reqfrmt} = "y" ]
+#then
+#	sudo mkfs -t ext4 /dev/${volID}
+#	echo 'Formatting device $volID as ext4'
+#fi
 
 #mount the volume
-sudo mkdir /FSTORE
-sudo mount /dev/${volID} /FSTORE
+#sudo mkdir /FSTORE
+#sudo mount /dev/${volID} /FSTORE
 
 echo "Have you created the ckan_default database user and schema with password on the database server?(y/n)"
 read confirmdb
@@ -78,10 +78,15 @@ sudo sed -i "s/#solr_url/solr_url/" /etc/ckan/default/development.ini #activate 
 sudo sed -i "s/#ckan.storage_path/ckan.storage_path/" development.ini #activate file store
 sudo sed -i "s_/var/lib/ckan_/FSTORE/ckan\_default_" development.ini #set file store location
 
-#initialise file store
-sudo mkdir -p /FSTORE/ckan_default
-sudo chown -R www-data /FSTORE/ckan_default #apache user must have permissions over file store 
-sudo chmod u+rwx /FSTORE/ckan_default #maintainer's guide says to use this command
+#initialise file store in production
+#sudo mkdir -p /FSTORE/ckan_default
+#sudo chown -R www-data /FSTORE/default #apache user must have permissions over file store 
+#sudo chmod u+rwx /FSTORE/default #maintainer's guide says to use this command
+
+#just use var for filestore now in development
+sudo mkdir -p /var/lib/ckan/default
+sudo chown -R www-data /var/lib/ckan/default #apache user must have permissions over file store 
+sudo chmod u+rwx /var/lib/ckan/default #maintainer's guide says to use this command
 
 #enable CKAN solr search platform on jetty and start
 sudo mv /etc/solr/conf/schema.xml /etc/solr/conf/schema.xml.bak
