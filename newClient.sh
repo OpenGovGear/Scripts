@@ -52,7 +52,7 @@ pip install -e 'git+https://github.com/ckan/ckan.git@ckan-2.2#egg=ckan'
 pip install -r /usr/lib/ckan/${orgName}/src/ckan/requirements.txt
 deactivate
 . /usr/lib/ckan/${orgName}/bin/activate
-#sudo cp -r /usr/lib/ckan/default/src /usr/lib/ckan/${orgName}/src
+sudo cp -r /usr/lib/ckan/${orgName}/src/ckan/ckan/public/base/css/main.css /usr/lib/ckan/${orgName}/src/ckan/ckan/public/base/css/main.debug.css
 sudo cp -r /etc/ckan/default /etc/ckan/${orgName}
 sudo ln -s /usr/lib/ckan/${orgName}/src/ckan/who.ini /etc/ckan/${orgName}/who.ini
 
