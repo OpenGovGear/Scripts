@@ -44,17 +44,21 @@ echo "Enter this machine's floating ip address:"
 read hostIP
 
 #create this client's directory trees from default
+sudo mkdir -p /usr/lib/ckan/${orgName}
+sudo chown `whoami` /usr/lib/ckan/${orgName}
+virtualenv  --no-site-packages /usr/lib/ckan/${orgName}
+sudo cp -r /usr/lib/ckan/default/src /usr/lib/ckan/${orgName}/src
 sudo cp -r /etc/ckan/default /etc/ckan/${orgName}
-sudo cp -r /usr/lib/ckan/default /usr/lib/ckan/${orgName}
 sudo ln -s /usr/lib/ckan/${orgName}/src/ckan/who.ini /etc/ckan/${orgName}/who.ini
-sudo ln -s /usr/lib/ckan/${orgName}/src/ckan/ckan/config/solr/schema.xml /etc/solr/conf/schema.xml #TO-DO maybe change this to work with multicore solr
 
 #customize development.ini configuration
 cd /etc/ckan/${orgName}
+sudo sed -i s/false/true/ development.ini #for development
 sudo sed -i s/ckan_default/${orgName}/ development.ini #user for postgres connection
 sudo sed -i s/pass/capstone/ development.ini #password for postgres connection
-sudo sed -i s/ckan_default/${orgName}_ctlg/ development.ini #table schema
-#sudo sed -i s/ckan\.site_url=/ckan\.site_url = http:\/\/${hostIP}/ development.ini #this command doesn't work
+sudo sed -i s/ckan_default/${orgName}_db/ development.ini #table schema
+sudo sed -i "s/ckan.site_url=/ckan.site_url = http:\/\/${hostIP}/" development.ini 
+sudo sed -i s/default/${orgName}/ development.ini #site_id parameter
 sudo sed -i s/CKAN/${orgName}/ development.ini #site_title wish we could make it all caps or capinit
 sudo sed -i 's/#solr_url/solr_url/' /etc/ckan/default/development.ini #activate solr
 sudo sed -i 's/#ckan\.storage_path/ckan\.storage_path/' development.ini #activate file store
@@ -68,7 +72,7 @@ sudo chmod u+rwx /FSTORE/${orgName} #because the user guide says so
 
 #enable CKAN solr search platform on jetty and start
 sudo mv /etc/solr/conf/schema.xml /etc/solr/conf/schema.xml.bak
-sudo ln -s /usr/lib/ckan/default/src/ckan/ckan/config/solr/schema.xml /etc/solr/conf/schema.xml
+sudo ln -s /usr/lib/ckan/${orgName}/src/ckan/ckan/config/solr/schema.xml /etc/solr/conf/schema.xml
 sudo service jetty start
 
 #create client database user, password and schema and initialise db
@@ -76,7 +80,7 @@ sudo -u postgres createuser -S -D -R ${orgName}
 sudo -u postgres psql -U postgres -d postgres -c "alter user ${orgName} with password 'capstone';"
 sudo -u postgres createdb -O ${orgName} ${orgName}_ctlg -E utf-8
 cd /usr/lib/ckan/${orgName}/src/ckan
-. /usr/lib/ckan/default/bin/activate
+. /usr/lib/ckan/${orgName}/bin/activate
 paster db init -c /etc/ckan/${orgName}/development.ini
 
 #serve client on port 5000

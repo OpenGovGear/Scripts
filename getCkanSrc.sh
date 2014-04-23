@@ -37,6 +37,7 @@ virtualenv /usr/lib/ckan/default
 . /usr/lib/ckan/default/bin/activate
 pip install -e 'git+https://github.com/ckan/ckan.git@ckan-2.2#egg=ckan'
 pip install -r /usr/lib/ckan/default/src/ckan/requirements.txt
+sudo cp /usr/lib/ckan/default/src/ckan/ckan/public/base/css/main.css /usr/lib/ckan/default/src/ckan/ckan/public/base/css/main.debug.css #necessary to enable debug mode, not sure why this file isn't present to begin with, hope this is an acceptable fix but don't know
 
 #create CKAN config file development.ini
 sudo mkdir -p /etc/ckan/default
