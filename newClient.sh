@@ -13,28 +13,28 @@
 #create production.ini file, dump db, and move everything to GIT
 
 #Mount external filestore
-echo "Enter the three letter volume identifier(n if you don't know):"
-read volID
+#echo "Enter the three letter volume identifier(n if you don't know):"
+#read volID
 
-if [ ${volID} = "n" ] #give user an out if they don't have the dev id
-then
-	echo 'Run sudo fdisk -l to view attached devices'
-	exit 1
-fi
+#if [ ${volID} = "n" ] #give user an out if they don't have the dev id
+#then
+#	echo 'Run sudo fdisk -l to view attached devices'
+#	exit 1
+#fi
 
 #Check whether we're using a volume copied from prod
 #that doesn't need formatting
-echo "Does the volume require formatting(y/n)?"
-read reqfrmt
-if [ ${reqfrmt} = "y" ]
-then
-	sudo mkfs -t ext4 /dev/${volID}
-	echo 'Formatting device $volID as ext4'
-fi
+#echo "Does the volume require formatting(y/n)?"
+#read reqfrmt
+#if [ ${reqfrmt} = "y" ]
+#then
+#	sudo mkfs -t ext4 /dev/${volID}
+#	echo 'Formatting device $volID as ext4'
+#fi
 
 #mount the volume
-sudo mkdir /FSTORE
-sudo mount /dev/${volID} /FSTORE
+#sudo mkdir /FSTORE
+#sudo mount /dev/${volID} /FSTORE
 
 #Get all required details about this deployment
 echo "Enter client organization's name:"
@@ -67,13 +67,19 @@ sudo sed -i s/default/${orgName}/ development.ini #site_id parameter
 sudo sed -i s/CKAN/${orgName}/ development.ini #site_title wish we could make it all caps or capinit
 sudo sed -i 's/#solr_url/solr_url/' /etc/ckan/default/development.ini #activate solr
 sudo sed -i 's/#ckan\.storage_path/ckan\.storage_path/' development.ini #activate file store
-sudo sed -i s_/var/lib/ckan_/FSTORE/${orgName}_ development.ini #set file store location
+#sudo sed -i s_/var/lib/ckan_/FSTORE/${orgName}_ development.ini #set file store location (external)
+sudo sed -i s_/var/lib/ckan_/var/lib/ckan/${orgName}_ #set file store (internal)
 
-#initialise file store
-sudo mkdir -p /FSTORE/${orgName}
-sudo chown `whoami` /FSTORE/${orgName} #paster runs under the id of 
+#initialise external file store
+#sudo mkdir -p /FSTORE/${orgName}
+#sudo chown `whoami` /FSTORE/${orgName} #paster runs under the id of 
 					#whatever user started it
-sudo chmod u+rwx /FSTORE/${orgName} #because the user guide says so
+#sudo chmod u+rwx /FSTORE/${orgName} #because the user guide says so
+
+#initiliase internal file store
+sudo mkdir -p /var/lib/ckan/${orgName}
+sudo chown `` /var/lib/ckan/${orgName}
+sudo chmod u+rwx /var/lib/ckan/${orgName}
 
 #enable CKAN solr search platform on jetty and start
 sudo mv /etc/solr/conf/schema.xml /etc/solr/conf/schema.xml.bak
