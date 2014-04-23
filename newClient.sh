@@ -47,7 +47,12 @@ read hostIP
 sudo mkdir -p /usr/lib/ckan/${orgName}
 sudo chown `whoami` /usr/lib/ckan/${orgName}
 virtualenv  --no-site-packages /usr/lib/ckan/${orgName}
-sudo cp -r /usr/lib/ckan/default/src /usr/lib/ckan/${orgName}/src
+. /usr/lib/ckan/${orgName}/bin/activate
+pip install -e 'git+https://github.com/ckan/ckan.git@ckan-2.2#egg=ckan'
+pip install -r /usr/lib/ckan/${orgName}/src/ckan/requirements.txt
+deactivate
+. /usr/lib/ckan/${orgName}/bin/activate
+sudo cp -r /usr/lib/ckan/${orgName}/src/ckan/ckan/public/base/css/main.css /usr/lib/ckan/${orgName}/src/ckan/ckan/public/base/css/main.debug.css
 sudo cp -r /etc/ckan/default /etc/ckan/${orgName}
 sudo ln -s /usr/lib/ckan/${orgName}/src/ckan/who.ini /etc/ckan/${orgName}/who.ini
 
@@ -78,7 +83,7 @@ sudo service jetty start
 #create client database user, password and schema and initialise db
 sudo -u postgres createuser -S -D -R ${orgName}
 sudo -u postgres psql -U postgres -d postgres -c "alter user ${orgName} with password 'capstone';"
-sudo -u postgres createdb -O ${orgName} ${orgName}_ctlg -E utf-8
+sudo -u postgres createdb -O ${orgName} ${orgName}_db -E utf-8
 cd /usr/lib/ckan/${orgName}/src/ckan
 . /usr/lib/ckan/${orgName}/bin/activate
 paster db init -c /etc/ckan/${orgName}/development.ini
