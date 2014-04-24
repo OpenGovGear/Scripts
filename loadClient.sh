@@ -11,7 +11,7 @@
 echo 'Enter the client organization name (lowercase):'
 read orgname
 
-echo "Has a git repository been set up for $orgName on OGG(y/n)?"
+echo 'Has a git repository been set up for "${orgName}" on OGG(y/n)?'
 read gitconfirm
 
 if [ ${gitconfirm} = "n" ] #create one
@@ -33,13 +33,15 @@ fi
 sudo mkdir -p /home/${orgname}
 sudo chown `whoami` /home/${orgname}/
 cd /home/${orgname}
-git init
-git remote add origin https://github.com/m-sinclair/"${reponame}".git
 touch README
-echo "Staging resources for ${orgname}" > README
-git add README
+#echo "Staging resources for ${orgname}" > README.md
+git init
+git add README.md
+git add README.md
 git commit -m 'the script works up to this point'
+git remote add origin https://github/com/"${gitusername}"/"${reponame}".git
 git push -u origin master
+#at this point you have created the repo and pushed the readme.md to it
 
 #Dump database and move dump file to local git repository
 . /usr/lib/ckan/default/bin/activate
