@@ -25,13 +25,13 @@ then
 	echo enter project description
 	read projectdesc
 	    # POST data via git API
-        curl -u "${gitusername}" https://api.github.com/user/repos -d '{"name":"${reponame}","description":"${projectdesc}"}'
+        curl -u ${gitusername} https://api.github.com/user/repos -d '{"name":"${reponame}","description":"${projectdesc}"}'
         # add def for location and existance of connect remote repo on github
 fi
 
 #create a git repository connected to OpenGovGear somehow
-sudo mkdir -p /home/${orgname}
-sudo chown `whoami` /home/${orgname}/
+mkdir -p /home/${orgname}
+chown `whoami` /home/${orgname}/
 cd /home/${orgname}
 touch README
 #echo "Staging resources for ${orgname}" > README.md
@@ -39,24 +39,24 @@ git init
 git add README.md
 git add README.md
 git commit -m 'the script works up to this point'
-git remote add origin https://github/com/"${gitusername}"/"${reponame}".git
+git remote add origin https://github/com/${gitusername}/${reponame}.git
 git push -u origin master
 #at this point you have created the repo and pushed the readme.md to it
 
 #Dump database and move dump file to local git repository
 . /usr/lib/ckan/default/bin/activate
 cd /usr/lib/ckan/default/src/ckan 
-paster db dump -c /etc/ckan/${orgName}/development.ini /home/${orgName}/${orgName}_dbdump.sql
+paster db dump -c /etc/ckan/${orgname}/development.ini /home/${orgname}/${orgname}_dbdump.sql
 
 #Create production.ini file and move to git file
-cp /etc/ckan/${orgName}/development.ini /home/${orgName}/production.ini
+cp /etc/ckan/${orgname}/development.ini /home/${orgname}/production.ini
 
 #TO-DO
 #move any custom plugins to git repository
 
 #commit files to remote git repository
 git commit -a -m 'load staged resources'
-git remote add origin https://github.com/OpenGovGear/${orgName}.git
-
+#git remote add origin https://github.com/OpenGovGear/${orgName}.git
+git push -u origin master
 #Change ownership of file store to www-data
-sudo chown -R www-data /FSTORE/${orgName}
+#sudo chown -R www-data /FSTORE/${orgName}
