@@ -83,9 +83,16 @@ sudo mkdir -p /FSTORE/ckan_default
 sudo chown -R www-data /FSTORE/ckan_default #apache user must have permissions over file store 
 sudo chmod u+rwx /FSTORE/ckan_default #maintainer's guide says to use this command
 
-#enable CKAN solr search platform on jetty and start
-sudo mv /etc/solr/conf/schema.xml /etc/solr/conf/schema.xml.bak
-sudo ln -s /usr/lib/ckan/default/src/ckan/ckan/config/solr/schema.xml /etc/solr/conf/schema.xml
+#enable multicore solr search platform on jetty and start
+sudo cp ./solr.xml /usr/share/solr/.
+sudo -u jetty mkdir /var/lib/solr/data/ckan_default
+sudo mkdir /etc/solr/ckan_default
+sudo mv /etc/solr/conf /etc/solr/ckan_default/
+sudo mv /etc/solr/ckan_default/conf/schema.xml /etc/solr/ckan_default/conf/schema.xml.bak
+sudo ln -s /usr/lib/ckan/default/src/ckan/ckan/config/solr/schema.xml /etc/solr/ckan_default/conf/schema.xml
+sudo sed -i 's_/var/lib/solr/data_${dataDir} _' /etc/solr/ckan_default/conf/solrconfig.xml
+sudo mkdir /usr/share/solr/ckan_default
+sudo ln -s /etc/solr/ckan_default/conf /usr/share/solr/ckan_default/conf
 sudo service jetty start
 
 #initialise db
