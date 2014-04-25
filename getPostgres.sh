@@ -51,4 +51,4 @@ sudo sed -i "s/PasswordAuthentication no/PasswordAuthentication yes/" /etc/ssh/s
 sudo service postgresql restart
 sudo service ssh restart
 
-sudo passwd ubuntu
+sudo passwd `whoami`
