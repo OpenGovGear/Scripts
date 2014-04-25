@@ -50,13 +50,13 @@ then
 fi
 
 #Install apache and nginx
-apt-get install -y apache2 libapache2-mod-wsgi nginx
+sudo apt-get install -y apache2 libapache2-mod-wsgi nginx
 
 #TO-DO HOW TO INSTALL POSTFIX FROM COMMAND LINE AND CONFIGURE
 
 
 #Put nginx and apache configuration files in place
-cp ./apache.wsgi /etc/ckan/default/.
+sudo cp ./apache.wsgi /etc/ckan/default/.
 cp ./ogg-proxy /etc/nginx/sites-available/.
 ln /etc/nginx/sites-available/ogg-proxy /etc/nginx/sites-enabled/ogg-proxy
 rm /etc/nginx/sites-enabled/default
