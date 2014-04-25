@@ -56,13 +56,13 @@ sudo apt-get install -y apache2 libapache2-mod-wsgi nginx
 
 
 #Put nginx and apache configuration files in place
-sudo cp ./scriptFiles/apache.wsgi /etc/ckan/default/.
-sudo cp ./scriptFiles/ogg-proxy /etc/nginx/sites-available/.
+sudo cp /scriptFiles/apache.wsgi /etc/ckan/default/.
+sudo cp /scriptFiles/ogg-proxy /etc/nginx/sites-available/.
 sudo ln /etc/nginx/sites-available/ogg-proxy /etc/nginx/sites-enabled/ogg-proxy
 sudo rm /etc/nginx/sites-enabled/default
 
 sudo sed -i 's/80/8080/' /etc/apache2/ports.conf
-sudo cp ./scriptFiles/ckan_default /etc/apache2/sites-available/. 
+sudo cp /scriptFiles/ckan_default /etc/apache2/sites-available/. 
 sudo ln -s /usr/lib/ckan/default/src/ckan/who.ini /etc/ckan/default/who.ini
 sudo mv /etc/solr/conf/schema.xml /etc/solr/conf/schema.xml.bak
 sudo ln -s /usr/lib/ckan/default/src/ckan/ckan/config/solr/schema.xml /etc/solr/conf/schema.xml #TO-DO maybe change this to work with multicore solr
@@ -91,7 +91,7 @@ sudo chown -R www-data /var/lib/ckan/default #apache user must have permissions 
 sudo chmod u+rwx /var/lib/ckan/default #maintainer's guide says to use this command
 
 #enable multicore solr search platform on jetty and start
-sudo cp ./scriptFiles/solr.xml /usr/share/solr/.
+sudo cp scriptFiles/solr.xml /usr/share/solr/.
 sudo -u jetty mkdir /var/lib/solr/data/ckan_default
 sudo mkdir /etc/solr/ckan_default
 sudo mv /etc/solr/conf /etc/solr/ckan_default/
