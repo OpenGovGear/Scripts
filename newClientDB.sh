@@ -11,7 +11,7 @@ echo "Enter client organization's name:"
 read orgName
 
 sudo -u postgres createuser -S -D -R ${orgName}
-sudo -u postgres psql -U postgres -d postgres -c "alter user ${orgName} with password 'capstone';"
+sudo -u postgres psql -U postgres -d postgres -c "alter user ${orgName} with password 'zandt2014';"
 sudo -u postgres createdb -O ${orgName} ${orgName}_db -E utf-8
 
 
