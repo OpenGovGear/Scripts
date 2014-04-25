@@ -6,6 +6,8 @@
 #the config file, establish a database schema, mount a filestore, prep 
 #plugins as part of new client staging
 
+sudo apt-get update
+
 #enable locate command
 sudo updatedb
 
