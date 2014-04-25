@@ -107,9 +107,8 @@ cd /usr/lib/ckan/default/src/ckan
 . /usr/lib/ckan/default/bin/activate
 paster db init -c /etc/ckan/default/development.ini
 
-cd /usr/lib/ckan/default/src/ckan
 sudo cp /etc/ckan/default/development.ini /etc/ckan/default/production.ini
-
 sudo a2ensite ckan_default
-sudo service apache2 start
-sudo service nginx reload
+sudo a2dissite default
+sudo service apache2 restart
+sudo service nginx restart
