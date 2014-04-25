@@ -121,14 +121,14 @@ deactivate
 cd /home/ubuntu
 
     # POST data via git API
-    curl -u $gitusername https://api.github.com/user/repos -d '{"name":"'"$orgName"'","description":"'"$projectdesc"'"}'
+    sudo curl -u $gitusername https://api.github.com/user/repos -d '{"name":"'"$orgName"'","description":"'"$projectdesc"'"}'
     # add def for location and existance of connect remote repo on github
 
 #create a git repository connected to OpenGovGear somehow
-mkdir -p /home/${orgName}
-chown -R `whoami` /home/${orgName}
+sudo mkdir -p /home/${orgName}
+sudo chown -R `whoami` /home/${orgName}
 cd /home/${orgName}
-touch README
+sudo touch README
 echo "Staging resources for $orgName" > README
 git init
 git add /home/${orgName}/README
@@ -142,7 +142,7 @@ deactivate
 cd /home/${orgName}
 
 #Create production.ini file and move to git file
-cp /etc/ckan/${orgName}/development.ini /home/${orgName}/production.ini
+sudo cp /etc/ckan/${orgName}/development.ini /home/${orgName}/production.ini
 
 #TO-DO
 #move any custom plugins to git repository
@@ -155,8 +155,8 @@ git commit -a -m 'load staged resources'
 git push -u origin master
 
 #Change ownership of file store to user for both ckan and org
-sudo chown -R 'ubuntu' var/lib/ckan/storage
-sudo chown -R 'ubuntu' var/lib/ckan/${orgName}
+sudo chown -R `whoami` var/lib/ckan/storage
+sudo chown -R `whoami` var/lib/ckan/${orgName}
 
 # Serve
 cd /usr/lib/ckan/${orgName}/src/ckan
