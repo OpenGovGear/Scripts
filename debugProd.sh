@@ -64,8 +64,8 @@ sudo rm /etc/nginx/sites-enabled/default
 sudo sed -i 's/80/8080/' /etc/apache2/ports.conf
 sudo cp scriptFiles/ckan_default /etc/apache2/sites-available/. 
 sudo ln -s /usr/lib/ckan/default/src/ckan/who.ini /etc/ckan/default/who.ini
-#sudo mv /etc/solr/conf/schema.xml /etc/solr/conf/schema.xml.bak
-#sudo ln -s /usr/lib/ckan/default/src/ckan/ckan/config/solr/schema.xml /etc/solr/conf/schema.xml #TO-DO maybe change this to work with multicore solr
+sudo mv /etc/solr/conf/schema.xml /etc/solr/conf/schema.xml.bak
+sudo ln -s /usr/lib/ckan/default/src/ckan/ckan/config/solr/schema.xml /etc/solr/conf/schema.xml #TO-DO maybe change this to work with multicore solr
 
 #customize development.ini configuration
 cd /etc/ckan/default
@@ -75,7 +75,7 @@ sudo sed -i "s/ckan_default/ckan_default_db?sslmode=disable/2" development.ini #
 #sudo sed -i "s/ckan.site_url =/ckan.site_url = http:\/\/${hostIP}/ development.ini" 
 sudo sed -i "s/CKAN/DEMO/" development.ini #Site title
 sudo sed -i "s/#solr_url/solr_url/" /etc/ckan/default/development.ini #activate solr
-sudo sed -i "s_8983/solr_8983/solr/ckan\_default_" /etc/ckan/default/development.ini #enable this core
+#sudo sed -i "s_8983/solr_8983/solr/ckan\_default_" /etc/ckan/default/development.ini #enable this core
 sudo sed -i "s/#ckan.storage_path/ckan.storage_path/" development.ini #activate file store
 #sudo sed -i "s_/var/lib/ckan_/FSTORE/default_" development.ini #set file store location
 sudo sed -i "s_/var/lib/ckan_/var/lib/ckan/default_" development.ini #set internal file store location
@@ -91,15 +91,15 @@ sudo chown -R www-data /var/lib/ckan/default #apache user must have permissions 
 sudo chmod u+rwx /var/lib/ckan/default #maintainer's guide says to use this command
 
 #enable multicore solr search platform on jetty and start
-sudo cp /home/ubuntu/Scripts/scriptFiles/solr.xml /usr/share/solr/.
-sudo -u jetty mkdir /var/lib/solr/data/ckan_default
-sudo mkdir /etc/solr/ckan_default
-sudo mv /etc/solr/conf /etc/solr/ckan_default/
-sudo mv /etc/solr/ckan_default/conf/schema.xml /etc/solr/ckan_default/conf/schema.xml.bak
-sudo ln -s /usr/lib/ckan/default/src/ckan/ckan/config/solr/schema.xml /etc/solr/ckan_default/conf/schema.xml
-sudo sed -i 's_/var/lib/solr/data_${dataDir}_' /etc/solr/ckan_default/conf/solrconfig.xml
-sudo mkdir /usr/share/solr/ckan_default
-sudo ln -s /etc/solr/ckan_default/conf /usr/share/solr/ckan_default/conf
+#sudo cp /home/ubuntu/Scripts/scriptFiles/solr.xml /usr/share/solr/.
+#sudo -u jetty mkdir /var/lib/solr/data/ckan_default
+#sudo mkdir /etc/solr/ckan_default
+#sudo mv /etc/solr/conf /etc/solr/ckan_default/
+#sudo mv /etc/solr/ckan_default/conf/schema.xml /etc/solr/ckan_default/conf/schema.xml.bak
+#sudo ln -s /usr/lib/ckan/default/src/ckan/ckan/config/solr/schema.xml /etc/solr/ckan_default/conf/schema.xml
+#sudo sed -i 's_/var/lib/solr/data_${dataDir}_' /etc/solr/ckan_default/conf/solrconfig.xml
+#sudo mkdir /usr/share/solr/ckan_default
+#sudo ln -s /etc/solr/ckan_default/conf /usr/share/solr/ckan_default/conf
 sudo service jetty start
 
 #initialise db
@@ -107,9 +107,8 @@ cd /usr/lib/ckan/default/src/ckan
 . /usr/lib/ckan/default/bin/activate
 paster db init -c /etc/ckan/default/development.ini
 
-cd /usr/lib/ckan/default/src/ckan
 sudo cp /etc/ckan/default/development.ini /etc/ckan/default/production.ini
-
 sudo a2ensite ckan_default
-sudo service apache2 start
-sudo service nginx reload
+sudo a2dissite default
+sudo service apache2 restart
+sudo service nginx restart
