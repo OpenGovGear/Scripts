@@ -16,7 +16,7 @@ git clone https://github.com/OpenGovGear/Scripts.git <br>
 Username for 'https://github.com' (your_username) <br>
 Password for 'https://(your_username)@github.com': (your_password)<br>
 
-./Scripts/(scriptname)
+./Scripts/<scriptname>
 
 
 
