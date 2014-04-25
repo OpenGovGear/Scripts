@@ -73,6 +73,8 @@ cd /etc/ckan/default
 sudo sed -i "s/pass\@localhost/zandt2014\@${dbserv}/" development.ini #password for postgres connection
 sudo sed -i "s/ckan_default/ckan_default_db?sslmode=disable/2" development.ini #table schema name
 #sudo sed -i "s/ckan.site_url =/ckan.site_url = http:\/\/${hostIP}/ development.ini" 
+#site_id parameter
+sudo sed -i s/default/ckan_default/ development.ini
 sudo sed -i "s/CKAN/DEMO/" development.ini #Site title
 sudo sed -i "s/#solr_url/solr_url/" /etc/ckan/default/development.ini #activate solr
 sudo sed -i "s_8983/solr_8983/solr/ckan\_default_" /etc/ckan/default/development.ini #enable this core
