@@ -1,14 +1,11 @@
 #/usr/bin/env bash
 
-#this script runs once on an image where postgres and 
-#git are already installed along with other housekeeping
-# features like ntp. This script must identify a GIT user
-#account and password with privileges over OpenGovGear, or 
-#it must be built into the image itself. Must use a credential
-#helper to avoid being prompted for credentials when interacting 
-#remote repo. 
+# This script install postgre on a fresh ubuntu install. It also does a few
+# housekeeping acctivites: updatedb, ntp. rsyslog, sets up ppk
 
-#The script must ask for the internal subnet ip address to receive db requests from and puts an entry in pg_hpa.conf as well as postgresql.conf, and restarts postgres to make the changes effective
+# The script must ask for the internal subnet ip address to receive db requests
+# from and puts an entry in pg_hpa.conf as well as postgresql.conf, and restarts 
+# postgres to make the changes effective
 
 echo "Enter the subnet IP address of the main CKAN server:(n if you don't know)"
 read ckanIP
