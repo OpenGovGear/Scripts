@@ -1,0 +1,7 @@
+<solr persistent="true" sharedLib="lib">
+    <cores adminPath="/admin/cores">
+        <core name="ckan_default" instanceDir="ckan_default">
+            <property name="dataDir" value="/var/lib/solr/data/ckan_default" />
+        </core>
+    </cores>
+</solr>
