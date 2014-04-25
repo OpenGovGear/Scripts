@@ -91,7 +91,7 @@ sudo chown -R www-data /var/lib/ckan/default #apache user must have permissions 
 sudo chmod u+rwx /var/lib/ckan/default #maintainer's guide says to use this command
 
 #enable multicore solr search platform on jetty and start
-sudo cp scriptFiles/solr.xml /usr/share/solr/.
+sudo cp /home/ubuntu/Scripts/scriptFiles/solr.xml /usr/share/solr/.
 sudo -u jetty mkdir /var/lib/solr/data/ckan_default
 sudo mkdir /etc/solr/ckan_default
 sudo mv /etc/solr/conf /etc/solr/ckan_default/
