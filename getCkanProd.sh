@@ -75,6 +75,7 @@ sudo sed -i "s/ckan_default/ckan_default_db?sslmode=disable/2" development.ini #
 #sudo sed -i "s/ckan.site_url =/ckan.site_url = http:\/\/${hostIP}/ development.ini" 
 sudo sed -i "s/CKAN/DEMO/ development.ini" #Site title
 sudo sed -i "s/#solr_url/solr_url/" /etc/ckan/default/development.ini #activate solr
+sudo sed -i "s_8983/solr_8983/solr/ckan\_default_" /etc/ckan/default/development.ini #enable this core
 sudo sed -i "s/#ckan.storage_path/ckan.storage_path/" development.ini #activate file store
 sudo sed -i "s_/var/lib/ckan_/FSTORE/ckan\_default_" development.ini #set file store location
 
