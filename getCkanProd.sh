@@ -70,7 +70,7 @@ sudo ln -s /usr/lib/ckan/default/src/ckan/ckan/config/solr/schema.xml /etc/solr/
 #customize development.ini configuration
 cd /etc/ckan/default
 #sudo sed -i "s/ckan_default/ckan_default/" development.ini #commented out best way to leave as default user
-sudo sed -i "s/pass\@localhost/capstone\@${dbserv}/" development.ini #password for postgres connection
+sudo sed -i "s/pass\@localhost/zandt2014\@${dbserv}/" development.ini #password for postgres connection
 sudo sed -i "s/ckan_default/ckan_default_db?sslmode=disable/2" development.ini #table schema name
 #sudo sed -i "s/ckan.site_url =/ckan.site_url = http:\/\/${hostIP}/ development.ini" 
 sudo sed -i "s/CKAN/DEMO/ development.ini" #Site title
