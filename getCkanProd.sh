@@ -64,8 +64,8 @@ sudo rm /etc/nginx/sites-enabled/default
 sudo sed -i 's/80/8080/' /etc/apache2/ports.conf
 sudo cp scriptFiles/ckan_default /etc/apache2/sites-available/. 
 sudo ln -s /usr/lib/ckan/default/src/ckan/who.ini /etc/ckan/default/who.ini
-sudo mv /etc/solr/conf/schema.xml /etc/solr/conf/schema.xml.bak
-sudo ln -s /usr/lib/ckan/default/src/ckan/ckan/config/solr/schema.xml /etc/solr/conf/schema.xml #TO-DO maybe change this to work with multicore solr
+#sudo mv /etc/solr/conf/schema.xml /etc/solr/conf/schema.xml.bak
+#sudo ln -s /usr/lib/ckan/default/src/ckan/ckan/config/solr/schema.xml /etc/solr/conf/schema.xml #TO-DO maybe change this to work with multicore solr
 
 #customize development.ini configuration
 cd /etc/ckan/default
