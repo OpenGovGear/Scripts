@@ -46,6 +46,7 @@ sudo cp /usr/lib/ckan/default/src/ckan/ckan/public/base/css/main.css /usr/lib/ck
 #create CKAN config file development.ini
 sudo mkdir -p /etc/ckan/default
 sudo chown -R `whoami` /etc/ckan/
-cd /usr/lib/ckan/default/src/ckan
-paster make-config ckan /etc/ckan/default/development.ini
+
+#cd /usr/lib/ckan/default/src/ckan
+#paster make-config ckan /etc/ckan/default/development.ini
 
