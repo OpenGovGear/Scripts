@@ -37,6 +37,10 @@
 #sudo mount /dev/${volID} /FSTORE
 #####################################################################################
 
+cd /usr/lib/ckan/default/src/ckan
+. /usr/lib/ckan/default/bin/activate
+paster make-config ckan /etcckan/default/development.ini
+
 echo Enter your user name for git:
 read gitusername
 
@@ -121,7 +125,7 @@ deactivate
 cd /home/ubuntu
 
     # POST data via git API
-    sudo curl -u $gitusername https://api.github.com/user/repos -d '{"name":"'"$orgName"'","description":"'"$projectdesc"'"}'
+    sudo curl -u $gitusername https://api.github.com/orgs/OpenGovGear/repos -d '{"name":"'"$orgName"'","description":"'"$projectdesc"'"}'
     # add def for location and existance of connect remote repo on github
 
 #create a git repository connected to OpenGovGear somehow
@@ -143,6 +147,32 @@ cd /home/${orgName}
 
 #Create production.ini file and move to git file
 sudo cp /etc/ckan/${orgName}/development.ini /home/${orgName}/production.ini
+
+
+echo 'Please enter the number for the theme you desire 1. Simple 2. Complex : '
+read theme
+
+cd /usr/lib/ckan/default/src
+git clone https://github.com/OpenGovGear/ckan-plugins.git
+git init
+
+if [ $theme = "1" ]
+	then
+		cp -r /usr/lib/ckan/default/src/ckan-plugins/ckanext-simple_theme .
+		git add ckanext-simple_theme
+elif [ $theme = "2" ]
+	then
+		cp -r /usr/lib/ckan/default/src/ckan-plugins/ckanext-complex_theme .
+		git add ckanext-complex_theme
+fi
+
+rm -rf /usr/lib/ckan/default/ckan-plugins
+
+git add remote origin https://github.com/OpenGovGear/${orgName}.git
+git commit
+git push -a origin master 
+
+	
 
 #TO-DO
 #move any custom plugins to git repository
