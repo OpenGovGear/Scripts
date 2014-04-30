@@ -67,7 +67,10 @@ sudo ln -s /usr/lib/ckan/default/src/ckan/who.ini /etc/ckan/default/who.ini
 #sudo mv /etc/solr/conf/schema.xml /etc/solr/conf/schema.xml.bak
 #sudo ln -s /usr/lib/ckan/default/src/ckan/ckan/config/solr/schema.xml /etc/solr/conf/schema.xml #TO-DO maybe change this to work with multicore solr
 
-#customize development.ini configuration
+#create and customize development.ini configuration
+. /usr/lib/ckan/default/bin/activate
+cd /usr/lib/ckan/default/src/ckan
+paster make-config ckan /etc/ckan/default/development.ini
 cd /etc/ckan/default
 #sudo sed -i "s/ckan_default/ckan_default/" development.ini #commented out best way to leave as default user
 sudo sed -i "s/pass\@localhost/zandt2014\@${dbserv}/" development.ini #password for postgres connection
