@@ -16,6 +16,7 @@ then
 fi
 
 #enable locate command
+sudo apt-get update
 sudo updatedb
 
 #set timezone
