@@ -39,7 +39,7 @@
 
 cd /usr/lib/ckan/default/src/ckan
 . /usr/lib/ckan/default/bin/activate
-paster make-config ckan /etcckan/default/development.ini
+paster make-config ckan /etc/ckan/default/development.ini
 
 echo Enter your user name for git:
 read gitusername
