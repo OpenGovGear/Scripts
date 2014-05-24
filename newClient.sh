@@ -94,7 +94,7 @@ sudo sed -i 's/#solr_url/solr_url/' /etc/ckan/default/development.ini
 sudo sed -i 's/#ckan\.storage_path/ckan\.storage_path/' development.ini
 #sudo sed -i s_/var/lib/ckan_/FSTORE/${orgName}_ development.ini #set file store location (external)
 #set file store (internal)
-sudo sed -i s_/var/lib/ckan_/var/lib/ckan/${orgName}_
+sudo sed -i "s_/var/lib/ckan_/var/lib/ckan/${orgName}_" development.ini
 
 ######################################################################################
 #initialise external file store
