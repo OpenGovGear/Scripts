@@ -133,6 +133,7 @@ sudo mkdir -p /home/${orgName}
 sudo chown -R `whoami` /home/${orgName}
 cd /home/${orgName}
 sudo touch README
+sudo chown `whoami` README
 echo "Staging resources for $orgName" > README
 git init
 git add /home/${orgName}/README
