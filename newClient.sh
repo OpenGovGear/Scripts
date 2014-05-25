@@ -65,7 +65,8 @@ sudo mkdir -p /usr/lib/ckan/${orgName}
 sudo chown `whoami` /usr/lib/ckan/${orgName}
 virtualenv  --no-site-packages /usr/lib/ckan/${orgName}
 . /usr/lib/ckan/${orgName}/bin/activate
-pip install -e 'git+https://github.com/ckan/ckan.git@ckan-2.2#egg=ckan'
+#pip install -e 'git+https://github.com/ckan/ckan.git@ckan-2.2#egg=ckan' #stable release for production
+pip install -e 'git+https://github.com/ckan/ckan.git#egg=ckan' #latest master branch commit for development
 pip install -r /usr/lib/ckan/${orgName}/src/ckan/requirements.txt
 deactivate
 . /usr/lib/ckan/${orgName}/bin/activate
