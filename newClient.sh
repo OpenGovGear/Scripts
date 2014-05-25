@@ -49,6 +49,7 @@ read mail
 
 git config --global user.name "${gitusername}"
 git config --global user.email "${mail}"
+git config credential.helper store
 
 #Get all required details about this deployment
 echo "Enter client organization's name:"
