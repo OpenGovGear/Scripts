@@ -44,9 +44,11 @@ pip install -e 'git+https://github.com/ckan/ckan.git#egg=ckan' #latest master br
 pip install -r /usr/lib/ckan/default/src/ckan/requirements.txt
 sudo cp /usr/lib/ckan/default/src/ckan/ckan/public/base/css/main.css /usr/lib/ckan/default/src/ckan/ckan/public/base/css/main.debug.css #necessary to enable debug mode, not sure why this file isn't present to begin with, hope this is an acceptable fix but don't know
 
+#JUST THE SOURCE INSTALLED, LET OTHER SCRIPTS INITIALIZE ENVIRONMENT
+
 #create CKAN config file development.ini
-sudo mkdir -p /etc/ckan/default
-sudo chown -R `whoami` /etc/ckan/
+#sudo mkdir -p /etc/ckan/default
+#sudo chown -R `whoami` /etc/ckan/
 
 #cd /usr/lib/ckan/default/src/ckan
 #paster make-config ckan /etc/ckan/default/development.ini
