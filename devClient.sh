@@ -37,14 +37,12 @@
 #sudo mount /dev/${volID} /FSTORE
 #####################################################################################
 
-cd /usr/lib/ckan/default/src/ckan
-. /usr/lib/ckan/default/bin/activate
-paster make-config ckan /etc/ckan/default/development.ini
 
-echo Enter your user name for git:
+
+echo Enter your git username:
 read gitusername
 
-echo 'Enter your email address for git:'
+echo 'Enter your the email address associated with your git account:'
 read mail
 
 git config --global user.name "${gitusername}"
@@ -55,25 +53,19 @@ git config credential.helper store
 echo "Enter client organization's name:"
 read orgName
 
-echo "enter client organization description"
+echo "Enter client organization description"
 read projectdesc
 
 echo "Enter this machine's floating ip address:"
 read hostIP
 
-#create this client's directory trees from default
-sudo mkdir -p /usr/lib/ckan/${orgName}
-sudo chown `whoami` /usr/lib/ckan/${orgName}
-virtualenv  --no-site-packages /usr/lib/ckan/${orgName}
-. /usr/lib/ckan/${orgName}/bin/activate
-#pip install -e 'git+https://github.com/ckan/ckan.git@ckan-2.2#egg=ckan' #stable release for production
-pip install -e 'git+https://github.com/ckan/ckan.git#egg=ckan' #latest master branch commit for development
-pip install -r /usr/lib/ckan/${orgName}/src/ckan/requirements.txt
-deactivate
-. /usr/lib/ckan/${orgName}/bin/activate
-sudo cp -r /usr/lib/ckan/${orgName}/src/ckan/ckan/public/base/css/main.css /usr/lib/ckan/${orgName}/src/ckan/ckan/public/base/css/main.debug.css
-sudo cp -r /etc/ckan/default /etc/ckan/${orgName}
-sudo ln -s /usr/lib/ckan/${orgName}/src/ckan/who.ini /etc/ckan/${orgName}/who.ini
+#create the client's development.ini file and link to who.ini
+sudo mkdir -p /etc/ckan/${orgName}
+sudo chown -R `whoami` /etc/ckan
+cd /usr/lib/ckan/default/src/ckan
+. /usr/lib/ckan/default/bin/activate
+paster make-config ckan /etc/ckan/${orgName}/development.ini
+sudo ln -s /usr/lib/ckan/default/src/ckan/who.ini /etc/ckan/${orgName}/who.ini
 
 #customize development.ini configuration
 cd /etc/ckan/${orgName}
