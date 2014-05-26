@@ -104,7 +104,7 @@ sudo chmod u+rwx /var/lib/ckan/${orgName}
 
 #enable CKAN solr search platform on jetty and start
 sudo mv /etc/solr/conf/schema.xml /etc/solr/conf/schema.xml.bak
-sudo ln -s /usr/lib/ckan/${orgName}/src/ckan/ckan/config/solr/schema.xml /etc/solr/conf/schema.xml
+sudo ln -s /usr/lib/ckan/default/src/ckan/ckan/config/solr/schema.xml /etc/solr/conf/schema.xml
 sudo service jetty start
 
 #create client database user, password and schema and initialise db
