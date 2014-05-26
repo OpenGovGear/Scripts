@@ -70,18 +70,16 @@ sudo ln -s /usr/lib/ckan/default/src/ckan/who.ini /etc/ckan/${orgName}/who.ini
 #customize development.ini configuration
 cd /etc/ckan/${orgName}
 #for development
-sudo sed -i s/false/true/ development.ini
+sudo sed -i "s/debug = false/debug = true/" development.ini
 #user for postgres connection
-sudo sed -i s/ckan_default/${orgName}/ development.ini
-#password for postgres connection
-sudo sed -i s/pass/zandt2014/ development.ini
+sudo sed -i s/ckan_default:pass/${orgName}:zandt2014/ development.ini
 #table schema
 sudo sed -i s/ckan_default/${orgName}_db/ development.ini
 sudo sed -i "s/ckan.site_url=/ckan.site_url = http:\/\/${hostIP}/" development.ini 
 #site_id parameter
-sudo sed -i s/default/${orgName}/ development.ini
+sudo sed -i "s/ckan.site_id = default/ckan.site_id = ${orgName}/" development.ini
 #site_title wish we could make it all caps or capinit
-sudo sed -i s/CKAN/${orgName}/ development.ini
+sudo sed -i s/ckan.site_title = CKAN/ckan.site_title = ${orgName}/ development.ini
 #activate solr
 sudo sed -i 's/#solr_url/solr_url/' /etc/ckan/default/development.ini
 #activate file store
