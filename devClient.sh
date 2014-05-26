@@ -75,11 +75,13 @@ sudo sed -i "s/debug = false/debug = true/" development.ini
 sudo sed -i s/ckan_default:pass/${orgName}:zandt2014/ development.ini
 #table schema
 sudo sed -i s/ckan_default/${orgName}_db/ development.ini
+#site_url parameter
 sudo sed -i "s/ckan.site_url=/ckan.site_url = http:\/\/${hostIP}/" development.ini 
 #site_id parameter
 sudo sed -i "s/ckan.site_id = default/ckan.site_id = ${orgName}/" development.ini
-#site_title wish we could make it all caps or capinit
-sudo sed -i s/ckan.site_title = CKAN/ckan.site_title = ${orgName}/ development.ini
+#site_title parameter, convert name to allcaps
+upperName=$(tr [a-z] [A-Z] <<< "$orgName")
+sudo sed -i s/ckan.site_title = CKAN/ckan.site_title = ${upperName}/ development.ini
 #activate solr
 sudo sed -i 's/#solr_url/solr_url/' development.ini
 #activate file store
