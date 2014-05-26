@@ -81,7 +81,7 @@ sudo sed -i "s/ckan.site_id = default/ckan.site_id = ${orgName}/" development.in
 #site_title wish we could make it all caps or capinit
 sudo sed -i s/ckan.site_title = CKAN/ckan.site_title = ${orgName}/ development.ini
 #activate solr
-sudo sed -i 's/#solr_url/solr_url/' /etc/ckan/default/development.ini
+sudo sed -i 's/#solr_url/solr_url/' development.ini
 #activate file store
 sudo sed -i 's/#ckan\.storage_path/ckan\.storage_path/' development.ini
 #sudo sed -i s_/var/lib/ckan_/FSTORE/${orgName}_ development.ini #set file store location (external)
