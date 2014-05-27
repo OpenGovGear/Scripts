@@ -134,11 +134,11 @@ sudo ln /home/`whoami`/${orgName}-staging/${orgName}/development.ini /etc/ckan/$
 
 if [ $theme = "1" ]
 	then
-		cp -r /home/`whoami`/ckan-plugins/ckanext-simple_theme /home/`whoami`/${orgName}-staging/${orgName}
+		cp -r /home/`whoami`/${orgName}-staging/ckan-plugins/ckanext-simple_theme /home/`whoami`/${orgName}-staging/${orgName}
 		
 elif [ $theme = "2" ]
 	then
-		cp -r /home/`whoami`/ckan-plugins/ckanext-complex_theme /home/`whoami`/${orgName}-staging/${orgName}
+		cp -r /home/`whoami`/${orgName}-staging/ckan-plugins/ckanext-complex_theme /home/`whoami`/${orgName}-staging/${orgName}
 		
 fi
 
