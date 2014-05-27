@@ -120,60 +120,35 @@ cd /home/ubuntu
     sudo curl -u $gitusername https://api.github.com/orgs/OpenGovGear/repos -d '{"name":"'"$orgName"'","description":"'"$projectdesc"'"}'
     # add def for location and existance of connect remote repo on github
 
-#create a git repository connected to OpenGovGear somehow
-sudo mkdir -p /home/`whoami`/${orgName}
-sudo chown -R `whoami` /home/`whoami`/${orgName}
-cd /home/`whoami`/${orgName}
+#create a git repository and gather resources into it
+sudo mkdir -p /home/`whoami`/${orgName}-staging/${orgName} 
+sudo chown -R `whoami` /home/`whoami`/${orgName}-staging
+cd /home/`whoami`/${orgName}-staging/
+git clone https://github.com/OpenGovGear/ckan-plugins.git
+cd /home/`whoami`/${orgName}-staging/${orgName}
+git init
 touch README
 echo "Staging resources for $orgName" > README
-git init
-git add /home/${orgName}/README
-#at this point you have created the repo and pushed the readme.md to it
-
-#Create production.ini file and move to git file
 sudo ln /home/`whoami`/${orgName}/development.ini /etc/ckan/${orgName}/development.ini 
-git add development.ini
-
-
-cd /usr/lib/ckan/default/src
-git clone https://github.com/OpenGovGear/ckan-plugins.git
-git init
 
 if [ $theme = "1" ]
 	then
-		cp -r /usr/lib/ckan/default/src/ckan-plugins/ckanext-simple_theme .
-		git add ckanext-simple_theme
+		cp -r /home/`whoami`/ckan-plugins/ckanext-simple_theme /home/`whoami`/${orgName}-staging/${orgName}
+		
 elif [ $theme = "2" ]
 	then
-		cp -r /usr/lib/ckan/default/src/ckan-plugins/ckanext-complex_theme .
-		git add ckanext-complex_theme
+		cp -r /home/`whoami`/ckan-plugins/ckanext-complex_theme /home/`whoami`/${orgName}-staging/${orgName}
+		
 fi
 
-rm -rf /usr/lib/ckan/default/ckan-plugins
-
+git add *
 git add remote origin https://github.com/OpenGovGear/${orgName}.git
-git commit
+git commit -m "Stage development resources for $orgName"
 git push -a origin master 
-
-	
-
-#TO-DO
-#move any custom plugins to git repository
-
-#commit files to remote git repository
-git add /home/${orgName}/${orgName}_dbdump.sql
-git add /home/${orgName}/production.ini
-git remote add origin https://github.com/$gitusername/$orgName.git
-git commit -a -m 'load staged resources'
-git push -u origin master
-
-#Change ownership of file store to user for both ckan and org
-sudo chown -R `whoami` var/lib/ckan/storage
-sudo chown -R `whoami` var/lib/ckan/${orgName}
 
 # Serve
 cd /usr/lib/ckan/${orgName}/src/ckan
 . /usr/lib/ckan/${orgName}/bin/activate
-paster db init -c /etc/ckan/${orgName}/development.ini
+paster serve /etc/ckan/${orgName}/development.ini
 
 
