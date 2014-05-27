@@ -104,7 +104,7 @@ sudo chmod u+rwx /var/lib/ckan/${orgName}
 #enable CKAN solr search platform on jetty and start
 sudo mv /etc/solr/conf/schema.xml /etc/solr/conf/schema.xml.bak
 sudo ln -s /usr/lib/ckan/default/src/ckan/ckan/config/solr/schema.xml /etc/solr/conf/schema.xml
-sudo service jetty start
+sudo service jetty restart
 
 #create client database user, password and schema and initialise db
 sudo -u postgres createuser -S -D -R ${orgName}
@@ -124,13 +124,13 @@ cd /home/ubuntu
 #create a git repository and gather resources into it
 sudo mkdir -p /home/`whoami`/${orgName}-staging/${orgName} 
 sudo chown -R `whoami` /home/`whoami`/${orgName}-staging
-cd /home/`whoami`/${orgName}-staging/
+cd /home/`whoami`/${orgName}-staging
 git clone https://github.com/OpenGovGear/ckan-plugins.git
 cd /home/`whoami`/${orgName}-staging/${orgName}
 git init
 touch README
 echo "Staging resources for $orgName" > README
-sudo ln /home/`whoami`/${orgName}/development.ini /etc/ckan/${orgName}/development.ini 
+sudo ln /home/`whoami`/${orgName}-staging/${orgName}development.ini /etc/ckan/${orgName}/development.ini 
 
 if [ $theme = "1" ]
 	then
@@ -150,6 +150,6 @@ git push -a origin master
 # Serve
 cd /usr/lib/ckan/default/src/ckan
 . /usr/lib/ckan/default/bin/activate
-paster serve /etc/ckan/default/development.ini
+paster serve /etc/ckan/${orgName}/development.ini
 
 
