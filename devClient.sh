@@ -72,21 +72,22 @@ cd /etc/ckan/${orgName}
 #for development
 sudo sed -i "s/debug = false/debug = true/" development.ini
 #user for postgres connection
-sudo sed -i s/ckan_default:pass/${orgName}:zandt2014/ development.ini
+sudo sed -i "s/ckan_default:pass/${orgName}:zandt2014/" development.ini
 #table schema
-sudo sed -i s/ckan_default/${orgName}_db/ development.ini
+sudo sed -i "s/ckan_default/${orgName}_db/" development.ini
 #site_id parameter
 sudo sed -i "s/ckan.site_id = default/ckan.site_id = ${orgName}/" development.ini
 #site_title parameter, convert name to allcaps
 upperName=$(tr [a-z] [A-Z] <<< "$orgName")
-sudo sed -i s/ckan.site_title = CKAN/ckan.site_title = ${upperName}/ development.ini
+sudo sed -i "s/ckan.site_title = CKAN/ckan.site_title = ${upperName}/" development.ini
 #activate solr
 sudo sed -i 's/#solr_url/solr_url/' development.ini
 #activate file store
 sudo sed -i 's/#ckan\.storage_path/ckan\.storage_path/' development.ini
-#sudo sed -i s_/var/lib/ckan_/FSTORE/${orgName}_ development.ini #set file store location (external)
+#set file store location (external)
+#sudo sed -i s_/var/lib/ckan_/FSTORE/${orgName}_ development.ini 
 #set file store (internal)
-sudo sed -i "s_/var/lib/ckan_/var/lib/ckan/${orgName}_" development.ini
+sudo sed -i "s_/var/lib/ckan_/var/lib/ckan/${orgName}_" development.ini 
 
 ######################################################################################
 #initialise external file store
@@ -109,8 +110,8 @@ sudo service jetty start
 sudo -u postgres createuser -S -D -R ${orgName}
 sudo -u postgres psql -U postgres -d postgres -c "alter user ${orgName} with password 'zandt2014';"
 sudo -u postgres createdb -O ${orgName} ${orgName}_db -E utf-8
-cd /usr/lib/ckan/${orgName}/src/ckan
-. /usr/lib/ckan/${orgName}/bin/activate
+cd /usr/lib/ckan/default/src/ckan
+. /usr/lib/ckan/default/bin/activate
 paster db init -c /etc/ckan/${orgName}/development.ini
 deactivate
 
@@ -147,8 +148,8 @@ git commit -m "Stage development resources for $orgName"
 git push -a origin master 
 
 # Serve
-cd /usr/lib/ckan/${orgName}/src/ckan
-. /usr/lib/ckan/${orgName}/bin/activate
-paster serve /etc/ckan/${orgName}/development.ini
+cd /usr/lib/ckan/default/src/ckan
+. /usr/lib/ckan/default/bin/activate
+paster serve /etc/ckan/default/development.ini
 
 
