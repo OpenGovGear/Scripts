@@ -115,8 +115,6 @@ cd /usr/lib/ckan/default/src/ckan
 paster db init -c /etc/ckan/${orgName}/development.ini
 deactivate
 
-cd /home/ubuntu
-
     # POST data via git API
     sudo curl -u $gitusername https://api.github.com/orgs/OpenGovGear/repos -d '{"name":"'"$orgName"'","description":"'"$projectdesc"'"}'
     # add def for location and existance of connect remote repo on github
@@ -144,7 +142,7 @@ fi
 
 git add *
 git commit -m "Stage development resources for $orgName"
-git add remote origin https://github.com/OpenGovGear/${orgName}.git
+git remote add origin https://github.com/OpenGovGear/${orgName}.git
 git push origin master 
 
 # Serve
