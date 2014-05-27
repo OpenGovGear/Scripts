@@ -45,7 +45,7 @@ function installTheme {
 	#mv /home/`whoami`/${orgName}-staging/${orgName}/ckanext-${themeName} /home/`whoami`/${orgName}-staging/${orgName}/ckanext-${orgName}_theme
 	#cd /home/`whoami`/${orgName}-staging/${orgName}/ckanext-${themeName}
 	#python setup.py develop
-	sudo sed -i "/plugins/ a\ ${themeName} " /etc/ckan/${orgName}/development.ini
+	#sudo sed -i "/plugins/ a\ ${themeName} " /etc/ckan/${orgName}/development.ini
 }
 
 echo Enter your git username:
