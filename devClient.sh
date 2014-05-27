@@ -53,19 +53,17 @@ function installTheme {
 		className="ExampleThemePlugin"
 	fi
 	orgInitCap=$(echo $orgName|awk '{print toupper(substr($1,1,1))tolower(substr($1,2))}')
-	#I think the best way to do this is to generate a new organiation theme plugin, and copy the default theme and resources in
 	cp -r /home/`whoami`/${orgName}-staging/ckan-plugins/ckanext-${themeName} /home/`whoami`/${orgName}-staging/${orgName}
-	paster --plugin=ckan create -t ckanext ckanext-${orgName}_theme
-	cp /home/`whoami`/${orgName}-staging/ckan-plugins/ckanext-${themeName}/ckanext/${themeName}/plugin.py /home/`whoami`/${orgName}-staging/${orgName}/ckanext-${orgName}_theme/ckanext/${orgName}_theme/plugin.py
-	sed -i "s/${className}/${orgInitCap}ThemePlugin/" /home/`whoami`/${orgName}-staging/${orgName}/ckanext-${orgName}_theme/ckanext/${orgName}_theme/plugin.py
-	
-	cd /home/`whoami`/${orgName}-staging/${orgName}
-	#mv /home/`whoami`/${orgName}-staging/${orgName}/ckanext-${themeName}/ckanext/${themeName} /home/`whoami`/${orgName}-staging/${orgName}/ckanext-${themeName}/ckanext/${orgName}_theme
-	#mv /home/`whoami`/${orgName}-staging/${orgName}/ckanext-${themeName}/ckanext_${themeName}.egg-info /home/`whoami`/${orgName}-staging/${orgName}/ckanext-${themeName}/ckanext_${orgName}_theme.egg-info
-	#mv /home/`whoami`/${orgName}-staging/${orgName}/ckanext-${themeName} /home/`whoami`/${orgName}-staging/${orgName}/ckanext-${orgName}_theme
-	#cd /home/`whoami`/${orgName}-staging/${orgName}/ckanext-${themeName}
+	#I think the best way to do this is to generate a new organiation theme plugin, and copy the default theme and resources in
+	#paster --plugin=ckan create -t ckanext ckanext-${orgName}_theme
+	#cp /home/`whoami`/${orgName}-staging/ckan-plugins/ckanext-${themeName}/ckanext/${themeName}/plugin.py /home/`whoami`/${orgName}-staging/${orgName}/ckanext-${orgName}_theme/ckanext/${orgName}_theme/plugin.py
+	#sed -i "s/${className}/${orgInitCap}ThemePlugin/" /home/`whoami`/${orgName}-staging/${orgName}/ckanext-${orgName}_theme/ckanext/${orgName}_theme/plugin.py
+	#cp /home/`whoami`/${orgName}-staging/ckan-plugins/ckanext-${themeName}/setup.py /home/`whoami`/${orgName}-staging/${orgName}/ckanext-${orgName}_theme/setup.py
+	#sed -i "s/${className}/${orgInitCap}ThemePlugin/" /home/`whoami`/${orgName}-staging/${orgName}/ckanext-${orgName}_theme/setup.py
+	#sed -i "s/${themeName}/${orgName}_theme/g" /home/`whoami`/${orgName}-staging/${orgName}/ckanext-${orgName}_theme/setup.py
 	#python setup.py develop
-	#sudo sed -i "/plugins/ a\ ${themeName} " /etc/ckan/${orgName}/development.ini
+	sudo sed -i "s/ckan.plugins =/ckan.plugins = ${themeName}/" /etc/ckan/${orgName}/development.ini #change to $orgName_theme eventually
+	#cd /home/`whoami`/${orgName}-staging/${orgName}
 }
 
 echo Enter your git username:
