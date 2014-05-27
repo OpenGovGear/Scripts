@@ -56,8 +56,8 @@ read orgName
 echo "Enter client organization description"
 read projectdesc
 
-echo "Enter this machine's floating ip address:"
-read hostIP
+echo 'Which theme will this organization use? (1=Simple 2=Complex) : '
+read theme
 
 #create the client's development.ini file and link to who.ini
 sudo mkdir -p /etc/ckan/${orgName}
@@ -75,8 +75,6 @@ sudo sed -i "s/debug = false/debug = true/" development.ini
 sudo sed -i s/ckan_default:pass/${orgName}:zandt2014/ development.ini
 #table schema
 sudo sed -i s/ckan_default/${orgName}_db/ development.ini
-#site_url parameter
-sudo sed -i "s/ckan.site_url=/ckan.site_url = http:\/\/${hostIP}/" development.ini 
 #site_id parameter
 sudo sed -i "s/ckan.site_id = default/ckan.site_id = ${orgName}/" development.ini
 #site_title parameter, convert name to allcaps
@@ -134,9 +132,8 @@ git add /home/${orgName}/README
 
 #Create production.ini file and move to git file
 sudo ln /home/`whoami`/${orgName}/development.ini /etc/ckan/${orgName}/development.ini 
+git add development.ini
 
-echo 'Which theme will this organization use? (1=Simple 2=Complex) : '
-read theme
 
 cd /usr/lib/ckan/default/src
 git clone https://github.com/OpenGovGear/ckan-plugins.git
