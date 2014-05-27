@@ -38,8 +38,28 @@
 #####################################################################################
 
 function installTheme {
+#TO-DO Some error handling here if they put in an invalid character by accident
+	if [ $theme = "1" ]
+	then
+		themeName="simple_theme"
+		className="SimpleThemePlugin"
+	elif [ $theme = "2" ]
+	then
+		themeName="complex_theme"
+		className="ComplexThemePlugin"
+	elif [ $theme = "3" ]
+	then
+		themeName="example_theme"
+		className="ExampleThemePlugin"
+	fi
+	orgInitCap=$(echo $orgName|awk '{print toupper(substr($1,1,1))tolower(substr($1,2))}')
 	#I think the best way to do this is to generate a new organiation theme plugin, and copy the default theme and resources in
 	cp -r /home/`whoami`/${orgName}-staging/ckan-plugins/ckanext-${themeName} /home/`whoami`/${orgName}-staging/${orgName}
+	paster --plugin=ckan create -t ckanext ckanext-${orgName}_theme
+	cp /home/`whoami`/${orgName}-staging/ckan-plugins/ckanext-${themeName}/ckanext/${themeName}/plugin.py /home/`whoami`/${orgName}-staging/${orgName}/ckanext-${orgName}_theme/ckanext/${orgName}_theme/plugin.py
+	sed -i "s/${className}/${orgInitCap}ThemePlugin/" /home/`whoami`/${orgName}-staging/${orgName}/ckanext-${orgName}_theme/ckanext/${orgName}_theme/plugin.py
+	
+	cd /home/`whoami`/${orgName}-staging/${orgName}
 	#mv /home/`whoami`/${orgName}-staging/${orgName}/ckanext-${themeName}/ckanext/${themeName} /home/`whoami`/${orgName}-staging/${orgName}/ckanext-${themeName}/ckanext/${orgName}_theme
 	#mv /home/`whoami`/${orgName}-staging/${orgName}/ckanext-${themeName}/ckanext_${themeName}.egg-info /home/`whoami`/${orgName}-staging/${orgName}/ckanext-${themeName}/ckanext_${orgName}_theme.egg-info
 	#mv /home/`whoami`/${orgName}-staging/${orgName}/ckanext-${themeName} /home/`whoami`/${orgName}-staging/${orgName}/ckanext-${orgName}_theme
@@ -132,25 +152,12 @@ sudo mkdir -p /home/`whoami`/${orgName}-staging/${orgName}
 sudo chown -R `whoami` /home/`whoami`/${orgName}-staging
 cd /home/`whoami`/${orgName}-staging
 git clone https://github.com/OpenGovGear/ckan-plugins.git
-#TO-DO Some error handling here if they put in an invalid character by accident
-if [ $theme = "1" ]
-	then
-		themeName="simple_theme"
-		installTheme
-elif [ $theme = "2" ]
-	then
-		themeName="complex_theme"
-		installTheme
-elif [ $theme = "3" ]
-	then
-		themeName="example_theme"
-		installTheme
-fi
 
 cd /home/`whoami`/${orgName}-staging/${orgName}
 git init
 touch README
 echo "Staging resources for $orgName" > README
+installTheme
 sudo ln /etc/ckan/${orgName}/development.ini /home/`whoami`/${orgName}-staging/${orgName}/development.ini
 git add *
 git commit -m "Stage development resources for $orgName"
