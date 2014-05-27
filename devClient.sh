@@ -123,28 +123,19 @@ cd /home/ubuntu
     # add def for location and existance of connect remote repo on github
 
 #create a git repository connected to OpenGovGear somehow
-sudo mkdir -p /home/${orgName}
-sudo chown -R `whoami` /home/${orgName}
-cd /home/${orgName}
-sudo touch README
-sudo chown `whoami` README
+sudo mkdir -p /home/`whoami`/${orgName}
+sudo chown -R `whoami` /home/`whoami`/${orgName}
+cd /home/`whoami`/${orgName}
+touch README
 echo "Staging resources for $orgName" > README
 git init
 git add /home/${orgName}/README
 #at this point you have created the repo and pushed the readme.md to it
 
-#Dump database and move dump file to local git repository
-. /usr/lib/ckan/default/bin/activate
-cd /usr/lib/ckan/default/src/ckan 
-paster db dump -c /etc/ckan/${orgName}/development.ini /home/${orgName}/${orgName}_dbdump.sql
-deactivate
-cd /home/${orgName}
-
 #Create production.ini file and move to git file
-sudo cp /etc/ckan/${orgName}/development.ini /home/${orgName}/production.ini
+sudo ln /home/`whoami`/${orgName}/development.ini /etc/ckan/${orgName}/development.ini 
 
-
-echo 'Please enter the number for the theme you desire 1. Simple 2. Complex : '
+echo 'Which theme will this organization use? (1=Simple 2=Complex) : '
 read theme
 
 cd /usr/lib/ckan/default/src
