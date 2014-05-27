@@ -37,7 +37,12 @@
 #sudo mount /dev/${volID} /FSTORE
 #####################################################################################
 
-
+function installTheme {
+	cp -r /home/`whoami`/${orgName}-staging/ckan-plugins/ckanext-${themeName} /home/`whoami`/${orgName}-staging/${orgName}
+	#cd /home/`whoami`/${orgName}-staging/${orgName}/ckanext-${themeName}
+	#python setup.py develop
+	sudo sed -i "/plugins/ a\ \" ${themeName}\" " /etc/ckan/${orgName}/development.ini
+}
 
 echo Enter your git username:
 read gitusername
@@ -113,7 +118,6 @@ sudo -u postgres createdb -O ${orgName} ${orgName}_db -E utf-8
 cd /usr/lib/ckan/default/src/ckan
 . /usr/lib/ckan/default/bin/activate
 paster db init -c /etc/ckan/${orgName}/development.ini
-deactivate
 
     # POST data via git API
     sudo curl -u $gitusername https://api.github.com/orgs/OpenGovGear/repos -d '{"name":"'"$orgName"'","description":"'"$projectdesc"'"}'
@@ -124,14 +128,19 @@ sudo mkdir -p /home/`whoami`/${orgName}-staging/${orgName}
 sudo chown -R `whoami` /home/`whoami`/${orgName}-staging
 cd /home/`whoami`/${orgName}-staging
 git clone https://github.com/OpenGovGear/ckan-plugins.git
+#TO-DO Some error handling here if they put in an invalid character by accident
 if [ $theme = "1" ]
 	then
-		cp -r /home/`whoami`/${orgName}-staging/ckan-plugins/ckanext-simple_theme /home/`whoami`/${orgName}-staging/${orgName}
-		
+		themeName="simple_theme"
+		installTheme
 elif [ $theme = "2" ]
 	then
-		cp -r /home/`whoami`/${orgName}-staging/ckan-plugins/ckanext-complex_theme /home/`whoami`/${orgName}-staging/${orgName}
-		
+		themeName="complex_theme"
+		installTheme
+elif [ $theme = "3" ]
+	then
+		themeName="example_theme"
+		installTheme
 fi
 
 cd /home/`whoami`/${orgName}-staging/${orgName}
