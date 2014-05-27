@@ -124,12 +124,6 @@ sudo mkdir -p /home/`whoami`/${orgName}-staging/${orgName}
 sudo chown -R `whoami` /home/`whoami`/${orgName}-staging
 cd /home/`whoami`/${orgName}-staging
 git clone https://github.com/OpenGovGear/ckan-plugins.git
-cd /home/`whoami`/${orgName}-staging/${orgName}
-git init
-touch README
-echo "Staging resources for $orgName" > README
-sudo ln /home/`whoami`/${orgName}-staging/${orgName}/development.ini /etc/ckan/${orgName}/development.ini 
-
 if [ $theme = "1" ]
 	then
 		cp -r /home/`whoami`/${orgName}-staging/ckan-plugins/ckanext-simple_theme /home/`whoami`/${orgName}-staging/${orgName}
@@ -140,6 +134,11 @@ elif [ $theme = "2" ]
 		
 fi
 
+cd /home/`whoami`/${orgName}-staging/${orgName}
+git init
+touch README
+echo "Staging resources for $orgName" > README
+sudo ln /etc/ckan/${orgName}/development.ini /home/`whoami`/${orgName}-staging/${orgName}/development.ini
 git add *
 git commit -m "Stage development resources for $orgName"
 git remote add origin https://github.com/OpenGovGear/${orgName}.git
