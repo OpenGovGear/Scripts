@@ -130,7 +130,7 @@ cd /home/`whoami`/${orgName}-staging/${orgName}
 git init
 touch README
 echo "Staging resources for $orgName" > README
-sudo ln /home/`whoami`/${orgName}-staging/${orgName}development.ini /etc/ckan/${orgName}/development.ini 
+sudo ln /home/`whoami`/${orgName}-staging/${orgName}/development.ini /etc/ckan/${orgName}/development.ini 
 
 if [ $theme = "1" ]
 	then
@@ -143,9 +143,9 @@ elif [ $theme = "2" ]
 fi
 
 git add *
-git add remote origin https://github.com/OpenGovGear/${orgName}.git
 git commit -m "Stage development resources for $orgName"
-git push -a origin master 
+git add remote origin https://github.com/OpenGovGear/${orgName}.git
+git push origin master 
 
 # Serve
 cd /usr/lib/ckan/default/src/ckan
