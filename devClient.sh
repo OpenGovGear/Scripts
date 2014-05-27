@@ -58,9 +58,9 @@ function installTheme {
 	#paster --plugin=ckan create -t ckanext ckanext-${orgName}_theme
 	#cp /home/`whoami`/${orgName}-staging/ckan-plugins/ckanext-${themeName}/ckanext/${themeName}/plugin.py /home/`whoami`/${orgName}-staging/${orgName}/ckanext-${orgName}_theme/ckanext/${orgName}_theme/plugin.py
 	#sed -i "s/${className}/${orgInitCap}ThemePlugin/" /home/`whoami`/${orgName}-staging/${orgName}/ckanext-${orgName}_theme/ckanext/${orgName}_theme/plugin.py
-	#cp /home/`whoami`/${orgName}-staging/ckan-plugins/ckanext-${themeName}/setup.py /home/`whoami`/${orgName}-staging/${orgName}/ckanext-${orgName}_theme/setup.py
-	#sed -i "s/${className}/${orgInitCap}ThemePlugin/" /home/`whoami`/${orgName}-staging/${orgName}/ckanext-${orgName}_theme/setup.py
-	#sed -i "s/${themeName}/${orgName}_theme/g" /home/`whoami`/${orgName}-staging/${orgName}/ckanext-${orgName}_theme/setup.py
+	#sed -i "s/PluginClass/${orgInitCap}ThemePlugin/" /home/`whoami`/${orgName}-staging/${orgName}/ckanext-${orgName}_theme/setup.py
+	#sed -i "s/# myplugin/${orgName}_theme/" /home/`whoami`/${orgName}-staging/${orgName}/ckanext-${orgName}_theme/setup.py
+	#sed -i "s/example_theme/${orgName}_theme/" /home/`whoami`/${orgName}-staging/${orgName}/ckanext-${orgName}_theme/setup.py
 	#python setup.py develop
 	sudo sed -i "s/ckan.plugins =/ckan.plugins = ${themeName}/" /etc/ckan/${orgName}/development.ini #change to $orgName_theme eventually
 	#cd /home/`whoami`/${orgName}-staging/${orgName}
