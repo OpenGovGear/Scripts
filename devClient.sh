@@ -70,6 +70,7 @@ function installTheme {
 	cp -r /home/`whoami`/${orgName}-staging/ckan-plugins/ckanext-${themeName}/ckanext/${themeName}/fanstatic /home/`whoami`/${orgName}-staging/ckan-plugins/ckanext-${themeName}/ckanext/${orgName}_theme
 	
 	#Install the plugin into this virutal environment (still activated?)
+	cd /home/`whoami`/${orgName}-staging/${orgName}/ckanext-${orgName}_theme
 	python setup.py develop
 	
 	#Activate this theme in the organization's development.ini config file
@@ -152,25 +153,28 @@ cd /usr/lib/ckan/default/src/ckan
 . /usr/lib/ckan/default/bin/activate
 paster db init -c /etc/ckan/${orgName}/development.ini
 
-    # POST data via git API
-    sudo curl -u $gitusername https://api.github.com/orgs/OpenGovGear/repos -d '{"name":"'"$orgName"'","description":"'"$projectdesc"'"}'
-    # add def for location and existance of connect remote repo on github
-
-#create a git repository and gather resources into it
+#create a folder structure for this organization's staging 
 sudo mkdir -p /home/`whoami`/${orgName}-staging/${orgName} 
 sudo chown -R `whoami` /home/`whoami`/${orgName}-staging
+
+#Bring in our theme extensions from git, use one as the template for this organization's theme
 cd /home/`whoami`/${orgName}-staging
 git clone https://github.com/OpenGovGear/ckan-plugins.git
+installTheme
 
+#create this organization's remote git repository via git API
+sudo curl -u $gitusername https://api.github.com/orgs/OpenGovGear/repos -d '{"name":"'"$orgName"'","description":"'"$projectdesc"'"}'
+
+#create this organization's local git repository and gather resources into it
 cd /home/`whoami`/${orgName}-staging/${orgName}
 git init
 touch README
 echo "Staging resources for $orgName" > README
-installTheme
 sudo ln /etc/ckan/${orgName}/development.ini /home/`whoami`/${orgName}-staging/${orgName}/development.ini
 git add *
 git commit -m "Stage development resources for $orgName"
 git remote add origin https://github.com/OpenGovGear/${orgName}.git
+#TO-DO create a branch to do staging, or something...
 git push origin master 
 
 # Serve
