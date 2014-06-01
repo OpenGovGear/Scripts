@@ -53,17 +53,28 @@ function installTheme {
 		className="ExampleThemePlugin"
 	fi
 	orgInitCap=$(echo $orgName|awk '{print toupper(substr($1,1,1))tolower(substr($1,2))}')
-	cp -r /home/`whoami`/${orgName}-staging/ckan-plugins/ckanext-${themeName} /home/`whoami`/${orgName}-staging/${orgName}
-	#I think the best way to do this is to generate a new organiation theme plugin, and copy the default theme and resources in
-	#paster --plugin=ckan create -t ckanext ckanext-${orgName}_theme
-	#cp /home/`whoami`/${orgName}-staging/ckan-plugins/ckanext-${themeName}/ckanext/${themeName}/plugin.py /home/`whoami`/${orgName}-staging/${orgName}/ckanext-${orgName}_theme/ckanext/${orgName}_theme/plugin.py
-	#sed -i "s/${className}/${orgInitCap}ThemePlugin/" /home/`whoami`/${orgName}-staging/${orgName}/ckanext-${orgName}_theme/ckanext/${orgName}_theme/plugin.py
-	#sed -i "s/PluginClass/${orgInitCap}ThemePlugin/" /home/`whoami`/${orgName}-staging/${orgName}/ckanext-${orgName}_theme/setup.py
-	#sed -i "s/# myplugin/${orgName}_theme/" /home/`whoami`/${orgName}-staging/${orgName}/ckanext-${orgName}_theme/setup.py
-	#sed -i "s/example_theme/${orgName}_theme/" /home/`whoami`/${orgName}-staging/${orgName}/ckanext-${orgName}_theme/setup.py
-	#python setup.py develop
-	sudo sed -i "s/ckan.plugins =/ckan.plugins = ${themeName}/" /etc/ckan/${orgName}/development.ini #change to $orgName_theme eventually
-	#cd /home/`whoami`/${orgName}-staging/${orgName}
+	
+	#Generate a new organization theme plugin, copy the requested theme with resources from git and rename to match this org
+	paster --plugin=ckan create -t ckanext ckanext-${orgName}_theme
+	sed -i "s/PluginClass/${orgInitCap}ThemePlugin/" /home/`whoami`/${orgName}-staging/${orgName}/ckanext-${orgName}_theme/setup.py
+	sed -i "s/# myplugin/${orgName}_theme/" /home/`whoami`/${orgName}-staging/${orgName}/ckanext-${orgName}_theme/setup.py
+	sed -i "s/example_theme/${orgName}_theme/" /home/`whoami`/${orgName}-staging/${orgName}/ckanext-${orgName}_theme/setup.py
+	
+	#Copy in the theme's plugin.py, and rename its class to match this organization
+	cp /home/`whoami`/${orgName}-staging/ckan-plugins/ckanext-${themeName}/ckanext/${themeName}/plugin.py /home/`whoami`/${orgName}-staging/${orgName}/ckanext-${orgName}_theme/ckanext/${orgName}_theme/plugin.py
+	sed -i "s/${className}/${orgInitCap}ThemePlugin/" /home/`whoami`/${orgName}-staging/${orgName}/ckanext-${orgName}_theme/ckanext/${orgName}_theme/plugin.py
+
+	#Copy in the resource folders
+	cp -r /home/`whoami`/${orgName}-staging/ckan-plugins/ckanext-${themeName}/ckanext/${themeName}/public /home/`whoami`/${orgName}-staging/ckan-plugins/ckanext-${themeName}/ckanext/${orgName}_theme
+	cp -r /home/`whoami`/${orgName}-staging/ckan-plugins/ckanext-${themeName}/ckanext/${themeName}/templates /home/`whoami`/${orgName}-staging/ckan-plugins/ckanext-${themeName}/ckanext/${orgName}_theme
+	cp -r /home/`whoami`/${orgName}-staging/ckan-plugins/ckanext-${themeName}/ckanext/${themeName}/fanstatic /home/`whoami`/${orgName}-staging/ckan-plugins/ckanext-${themeName}/ckanext/${orgName}_theme
+	
+	#Install the plugin into this virutal environment (still activated?)
+	python setup.py develop
+	
+	#Activate this theme in the organization's development.ini config file
+	sudo sed -i "s/ckan.plugins =/ckan.plugins = ${orgName}_theme/" /etc/ckan/${orgName}/development.ini 
+	
 }
 
 echo Enter your git username:
