@@ -66,9 +66,9 @@ function installTheme {
 	sed -i "s/${className}/${orgInitCap}ThemePlugin/" /home/`whoami`/${orgName}-staging/${orgName}/ckanext-${orgName}_theme/ckanext/${orgName}_theme/plugin.py
 
 	#Copy in the resource folders
-	cp -r /home/`whoami`/${orgName}-staging/ckan-plugins/ckanext-${themeName}/ckanext/${themeName}/public /home/`whoami`/${orgName}-staging/ckan-plugins/ckanext-${themeName}/ckanext/${orgName}_theme
-	cp -r /home/`whoami`/${orgName}-staging/ckan-plugins/ckanext-${themeName}/ckanext/${themeName}/templates /home/`whoami`/${orgName}-staging/ckan-plugins/ckanext-${themeName}/ckanext/${orgName}_theme
-	cp -r /home/`whoami`/${orgName}-staging/ckan-plugins/ckanext-${themeName}/ckanext/${themeName}/fanstatic /home/`whoami`/${orgName}-staging/ckan-plugins/ckanext-${themeName}/ckanext/${orgName}_theme
+	cp -r /home/`whoami`/${orgName}-staging/ckan-plugins/ckanext-${themeName}/ckanext/${themeName}/public /home/`whoami`/${orgName}-staging/${orgName}/ckanext-${orgName}_theme/ckanext/${orgName}_theme
+	cp -r /home/`whoami`/${orgName}-staging/ckan-plugins/ckanext-${themeName}/ckanext/${themeName}/templates /home/`whoami`/${orgName}-staging/${orgName}/ckanext-${orgName}_theme/ckanext/${orgName}_theme
+	cp -r /home/`whoami`/${orgName}-staging/ckan-plugins/ckanext-${themeName}/ckanext/${themeName}/fanstatic /home/`whoami`/${orgName}-staging/${orgName}/ckanext-${orgName}_theme/ckanext/${orgName}_theme
 	
 	#Install the plugin into this virutal environment (still activated?)
 	cd /home/`whoami`/${orgName}-staging/${orgName}/ckanext-${orgName}_theme
