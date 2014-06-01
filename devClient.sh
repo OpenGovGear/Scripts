@@ -55,6 +55,7 @@ function installTheme {
 	orgInitCap=$(echo $orgName|awk '{print toupper(substr($1,1,1))tolower(substr($1,2))}')
 	
 	#Generate a new organization theme plugin, copy the requested theme with resources from git and rename to match this org
+	cd /home/`whoami`/${orgName}-staging/${orgName}
 	paster --plugin=ckan create -t ckanext ckanext-${orgName}_theme
 	sed -i "s/PluginClass/${orgInitCap}ThemePlugin/" /home/`whoami`/${orgName}-staging/${orgName}/ckanext-${orgName}_theme/setup.py
 	sed -i "s/# myplugin/${orgName}_theme/" /home/`whoami`/${orgName}-staging/${orgName}/ckanext-${orgName}_theme/setup.py
