@@ -57,21 +57,26 @@ function installTheme {
 	#Generate a new organization theme plugin, copy the requested theme with resources from git and rename to match this org
 	cd /home/`whoami`/${orgName}-staging/${orgName}
 	paster --plugin=ckan create -t ckanext ckanext-${orgName}_theme
-	sed -i "s/PluginClass/${orgInitCap}ThemePlugin/" /home/`whoami`/${orgName}-staging/${orgName}/ckanext-${orgName}_theme/setup.py
-	sed -i "s/# myplugin/${orgName}_theme/" /home/`whoami`/${orgName}-staging/${orgName}/ckanext-${orgName}_theme/setup.py
-	sed -i "s/example_theme/${orgName}_theme/" /home/`whoami`/${orgName}-staging/${orgName}/ckanext-${orgName}_theme/setup.py
+	
+	oggResourcePath=/home/`whoami`/${orgName}-staging/ckan-plugins/ckanext-${themeName}/ckanext/${themeName}
+	orgThemePath=/home/`whoami`/${orgName}-staging/${orgName}/ckanext-${orgName}_theme
+	
+	
+	sed -i "s/PluginClass/${orgInitCap}ThemePlugin/" ${orgThemePath}/setup.py
+	sed -i "s/# myplugin/${orgName}_theme/" ${orgThemePath}/setup.py
+	sed -i "s/example_theme/${orgName}_theme/" ${orgThemePath}/setup.py
 	
 	#Copy in the theme's plugin.py, and rename its class to match this organization
-	cp /home/`whoami`/${orgName}-staging/ckan-plugins/ckanext-${themeName}/ckanext/${themeName}/plugin.py /home/`whoami`/${orgName}-staging/${orgName}/ckanext-${orgName}_theme/ckanext/${orgName}_theme/plugin.py
-	sed -i "s/${className}/${orgInitCap}ThemePlugin/" /home/`whoami`/${orgName}-staging/${orgName}/ckanext-${orgName}_theme/ckanext/${orgName}_theme/plugin.py
+	cp ${oggResourcePath}/plugin.py ${orgThemePath}/ckanext/${orgName}_theme/plugin.py
+	sed -i "s/${className}/${orgInitCap}ThemePlugin/" ${orgThemePath}/ckanext/${orgName}_theme/plugin.py
 
 	#Copy in the resource folders
-	cp -r /home/`whoami`/${orgName}-staging/ckan-plugins/ckanext-${themeName}/ckanext/${themeName}/public /home/`whoami`/${orgName}-staging/${orgName}/ckanext-${orgName}_theme/ckanext/${orgName}_theme
-	cp -r /home/`whoami`/${orgName}-staging/ckan-plugins/ckanext-${themeName}/ckanext/${themeName}/templates /home/`whoami`/${orgName}-staging/${orgName}/ckanext-${orgName}_theme/ckanext/${orgName}_theme
-	cp -r /home/`whoami`/${orgName}-staging/ckan-plugins/ckanext-${themeName}/ckanext/${themeName}/fanstatic /home/`whoami`/${orgName}-staging/${orgName}/ckanext-${orgName}_theme/ckanext/${orgName}_theme
+	cp -r ${oggResourcePath}/public ${orgThemePath}/ckanext/${orgName}_theme
+	cp -r ${oggResourcePath}/templates ${orgThemePath}/ckanext/${orgName}_theme
+	cp -r ${oggResourcePath}/ckanext/${themeName}/fanstatic ${orgThemePath}/ckanext/${orgName}_theme
 	
 	#Install the plugin into this virutal environment (still activated?)
-	cd /home/`whoami`/${orgName}-staging/${orgName}/ckanext-${orgName}_theme
+	cd ${orgThemePath}
 	python setup.py develop
 	
 	#Activate this theme in the organization's development.ini config file
@@ -164,7 +169,7 @@ git clone https://github.com/OpenGovGear/ckan-plugins.git
 installTheme
 
 #create this organization's remote git repository via git API
-sudo curl -u $gitusername https://api.github.com/orgs/OpenGovGear/repos -d '{"name":"'"$orgName"'","description":"'"$projectdesc"'"}'
+sudo curl -u $gitusername https://api.github.com/orgs/OpenGovGear/repos -d '{"name":"'"${orgName}-staging"'","description":"'"$projectdesc"'"}'
 
 #create this organization's local git repository and gather resources into it
 cd /home/`whoami`/${orgName}-staging/${orgName}
@@ -174,8 +179,7 @@ echo "Staging resources for $orgName" > README
 sudo ln /etc/ckan/${orgName}/development.ini /home/`whoami`/${orgName}-staging/${orgName}/development.ini
 git add *
 git commit -m "Stage development resources for $orgName"
-git remote add origin https://github.com/OpenGovGear/${orgName}.git
-#TO-DO create a branch to do staging, or something...
+git remote add origin https://github.com/OpenGovGear/${orgName}-staging.git
 git push origin master 
 
 # Serve
