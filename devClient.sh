@@ -73,7 +73,7 @@ function installTheme {
 	#Copy in the resource folders
 	cp -r ${oggResourcePath}/public ${orgThemePath}/ckanext/${orgName}_theme
 	cp -r ${oggResourcePath}/templates ${orgThemePath}/ckanext/${orgName}_theme
-	cp -r ${oggResourcePath}/ckanext/${themeName}/fanstatic ${orgThemePath}/ckanext/${orgName}_theme
+	cp -r ${oggResourcePath}/fanstatic ${orgThemePath}/ckanext/${orgName}_theme
 	
 	#Install the plugin into this virutal environment (still activated?)
 	cd ${orgThemePath}
