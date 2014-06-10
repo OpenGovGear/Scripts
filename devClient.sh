@@ -104,6 +104,9 @@ read projectdesc
 echo 'Which theme will this organization use? (1=Simple 2=Complex) : '
 read theme
 
+#Install solr, jetty etc
+sudo apt-get install -y solr-jetty openjdk-6-jdk
+
 #create the client's development.ini file and link to who.ini
 sudo mkdir -p /etc/ckan/${orgName}
 sudo chown -R `whoami` /etc/ckan
