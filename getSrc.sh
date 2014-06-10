@@ -25,13 +25,6 @@ sudo service rsyslog restart
 #install CKAN dependencies
 sudo apt-get install -y python-dev postgresql libpq-dev python-pip python-virtualenv git-core solr-jetty openjdk-6-jdk apache2 libapache2-mod-wsgi nginx
 
-#Enable jetty and configure to serve internally
-cd /etc/default
-sudo sed -i 's/NO_START=1/NO_START=0/' jetty
-sudo sed -i 's/#JETTY_HOST=/JETTY_HOST=127.0.0.1 #/' jetty
-sudo sed -i 's/#JETTY_PORT=8080/JETTY_PORT=8983/' jetty
-sudo sed -i 's/#JAVA_HOME=/JAVA_HOME=\/usr\/lib\/jvm\/java-6-openjdk-amd64\//' jetty
-
 #create CKAN src tree and virtualenv
 sudo mkdir -p /usr/lib/ckan/default
 sudo chown `whoami` /usr/lib/ckan/default
