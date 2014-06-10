@@ -31,7 +31,19 @@ sudo service ntp status
 sudo service rsyslog restart
 
 #install CKAN dependencies
-sudo apt-get install -y postgresql libpq-dev
+sudo apt-get install -y postgresql libpq-dev solr-jetty openjdk-6-jdk
+
+#enable multicore solr search platform on jetty and start
+sudo cp /home/ubuntu/Scripts/scriptFiles/solr.xml /usr/share/solr/.
+sudo -u jetty mkdir /var/lib/solr/data/ckan_default
+sudo mkdir /etc/solr/ckan_default
+sudo mv /etc/solr/conf /etc/solr/ckan_default/
+sudo mv /etc/solr/ckan_default/conf/schema.xml /etc/solr/ckan_default/conf/schema.xml.bak
+sudo ln -s /usr/lib/ckan/default/src/ckan/ckan/config/solr/schema.xml /etc/solr/ckan_default/conf/schema.xml
+sudo sed -i 's_/var/lib/solr/data_${dataDir}_' /etc/solr/ckan_default/conf/solrconfig.xml
+sudo mkdir /usr/share/solr/ckan_default
+sudo ln -s /etc/solr/ckan_default/conf /usr/share/solr/ckan_default/conf
+sudo service jetty start
 
 #sed command to make postgresql.conf listen to all ip addresses
 cd /etc/postgresql/*/main
