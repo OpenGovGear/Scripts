@@ -33,6 +33,13 @@ sudo service rsyslog restart
 #install CKAN dependencies
 sudo apt-get install -y postgresql libpq-dev solr-jetty openjdk-6-jdk
 
+#Enable jetty and configure to serve internally
+cd /etc/default
+sudo sed -i 's/NO_START=1/NO_START=0/' jetty
+sudo sed -i 's/#JETTY_HOST=/JETTY_HOST=${ckanIP} #/' jetty
+sudo sed -i 's/#JETTY_PORT=8080/JETTY_PORT=8983/' jetty
+sudo sed -i 's/#JAVA_HOME=/JAVA_HOME=\/usr\/lib\/jvm\/java-6-openjdk-amd64\//' jetty
+
 #enable multicore solr search platform on jetty and start
 sudo cp /home/ubuntu/Scripts/scriptFiles/solr.xml /usr/share/solr/.
 sudo -u jetty mkdir /var/lib/solr/data/ckan_default
