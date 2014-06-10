@@ -146,10 +146,17 @@ sudo mkdir -p /var/lib/ckan/${orgName}
 sudo chown 'ubuntu' /var/lib/ckan/${orgName}
 sudo chmod u+rwx /var/lib/ckan/${orgName}
 
+#Enable jetty and configure to serve internally
+cd /etc/default
+sudo sed -i 's/NO_START=1/NO_START=0/' jetty
+sudo sed -i 's/#JETTY_HOST=/JETTY_HOST=127.0.0.1 #/' jetty
+sudo sed -i 's/#JETTY_PORT=8080/JETTY_PORT=8983/' jetty
+sudo sed -i 's/#JAVA_HOME=/JAVA_HOME=\/usr\/lib\/jvm\/java-6-openjdk-amd64\//' jetty
+
 #enable CKAN solr search platform on jetty and start
 sudo mv /etc/solr/conf/schema.xml /etc/solr/conf/schema.xml.bak
 sudo ln -s /usr/lib/ckan/default/src/ckan/ckan/config/solr/schema.xml /etc/solr/conf/schema.xml
-sudo service jetty restart
+sudo service jetty start
 
 #create client database user, password and schema and initialise db
 sudo -u postgres createuser -S -D -R ${orgName}
