@@ -23,7 +23,7 @@ sudo service ntp status
 sudo service rsyslog restart
 
 #install CKAN dependencies
-sudo apt-get install -y python-dev postgresql libpq-dev python-pip python-virtualenv git-core solr-jetty openjdk-6-jdk apache2 libapache2-mod-wsgi nginx
+sudo apt-get install -y python-dev postgresql libpq-dev python-pip python-virtualenv git-core 
 
 #create CKAN src tree and virtualenv
 sudo mkdir -p /usr/lib/ckan/default
