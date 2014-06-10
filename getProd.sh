@@ -54,6 +54,9 @@ sudo apt-get install -y apache2 libapache2-mod-wsgi nginx
 
 #TO-DO HOW TO INSTALL POSTFIX FROM COMMAND LINE AND CONFIGURE
 
+#create ckan default configuration folder
+sudo mkdir -p /etc/ckan/default
+sudo chown -R `whoami` /etc/ckan/
 
 #Put nginx and apache configuration files in place
 sudo cp scriptFiles/apache.wsgi /etc/ckan/default/.
@@ -68,8 +71,6 @@ sudo ln -s /usr/lib/ckan/default/src/ckan/who.ini /etc/ckan/default/who.ini
 #sudo ln -s /usr/lib/ckan/default/src/ckan/ckan/config/solr/schema.xml /etc/solr/conf/schema.xml #TO-DO maybe change this to work with multicore solr
 
 #create and customize development.ini configuration
-sudo mkdir -p /etc/ckan/default
-sudo chown -R `whoami` /etc/ckan/
 . /usr/lib/ckan/default/bin/activate
 cd /usr/lib/ckan/default/src/ckan
 paster make-config ckan /etc/ckan/default/development.ini
