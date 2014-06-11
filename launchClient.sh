@@ -34,6 +34,9 @@ read hostIP
 #bring in the configuration file and extensions
 git clone https://github.com/OpenGovGear/${orgName}-staging
 
+sudo mkdir -p /etc/ckan/${orgName}
+sudo chown `whoami` /etc/ckan/${orgName}
+
 #point the config file to the database server and make other customizations
 #specific to production server
 sudo cp ./${orgName}-staging/production.ini /etc/ckan/${orgName}/production.ini
