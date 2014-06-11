@@ -31,7 +31,14 @@ sudo service ntp status
 sudo service rsyslog restart
 
 #install CKAN dependencies
-sudo apt-get install -y postgresql libpq-dev solr-jetty openjdk-6-jdk
+sudo apt-get install -y postgresql libpq-dev solr-jetty openjdk-6-jdk python-dev python-pip python-virtualenv
+
+#install python virtualenv and ckan source
+sudo mkdir -p /usr/lib/ckan/default
+sudo chown `whoami` /usr/lib/ckan/default
+virtualenv --no-site-packages /usr/lib/ckan/default
+. /usr/lib/ckan/default/bin/activate
+pip install -e 'git+https://github.com/ckan/ckan.git@ckan-2.2#egg=ckan'
 
 #Enable jetty and configure to serve internally
 cd /etc/default
