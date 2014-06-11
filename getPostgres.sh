@@ -40,7 +40,8 @@ virtualenv --no-site-packages /usr/lib/ckan/default
 . /usr/lib/ckan/default/bin/activate
 pip install -e 'git+https://github.com/ckan/ckan.git@ckan-2.2#egg=ckan'
 
-#Enable jetty and configure to serve internally
+#Enable jetty and configure to serve externally to all ip addresses, cause otherwise
+#the ckan server can't connect to solr
 cd /etc/default
 sudo sed -i 's/NO_START=1/NO_START=0/' jetty
 sudo sed -i "s/#JETTY_HOST=/JETTY_HOST=0.0.0.0 #/" jetty
