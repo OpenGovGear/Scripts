@@ -51,8 +51,6 @@ python setup.py develop
 
 #create this client's virtual host files
 sudo cp /etc/ckan/default/apache.wsgi /etc/ckan/${orgName}/apache.wsgi
-sudo sed -i "s/default/${orgName}/" /etc/ckan/${orgName}/apache.wsgi
-
 sudo cp /etc/apache2/sites-available/ckan_default /etc/apache2/sites-available/${orgName}
 cd /etc/apache2/sites-available
 sudo sed -i s/ckan_default/${orgName}/ ${orgName}
@@ -62,6 +60,11 @@ sudo sed -i s/default/${orgName}/ ${orgName}
 
 #enable this client's solr core
 sudo sed -i "s_127.0.0.1:8983/solr_${dbserv}:8983/solr/${orgName}_" /etc/ckan/${orgName}/production.ini
+
+#just use var for filestore now in development
+sudo mkdir -p /var/lib/ckan/default
+sudo chown -R www-data /var/lib/ckan/default #apache user must have permissions over file store 
+sudo chmod u+rwx /var/lib/ckan/default #maintainer's guide says to use this command
 
 sudo a2ensite ${orgName}
 sudo service apache2 restart
