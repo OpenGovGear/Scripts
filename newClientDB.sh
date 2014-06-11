@@ -21,7 +21,7 @@ sudo -u jetty mkdir /var/lib/solr/data/${orgName}
 sudo mkdir /etc/solr/${orgName}
 sudo cp -R /etc/solr/ckan_default/conf /etc/solr/${orgName}/
 sudo rm /etc/solr/${orgName}/conf/schema.xml
-sudo ln -s /usr/lib/ckan/${orgName}/src/ckan/ckan/config/solr/schema.xml /etc/solr/${orgName}/conf/schema.xml
+sudo ln -s /usr/lib/ckan/default/src/ckan/ckan/config/solr/schema.xml /etc/solr/${orgName}/conf/schema.xml
 sudo mkdir /usr/share/solr/${orgName}
 sudo ln -s /etc/solr/${orgName}/conf /usr/share/solr/${orgName}/conf
 sudo service jetty restart
