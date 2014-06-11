@@ -49,6 +49,10 @@ function installTheme {
 		className="ComplexThemePlugin"
 	elif [ $theme = "3" ]
 	then
+		themeName="aggregator_theme"
+		className="AggregatorThemePlugin"
+	elif [ $theme = "4" ]
+	then
 		themeName="example_theme"
 		className="ExampleThemePlugin"
 	fi
@@ -101,7 +105,8 @@ read orgName
 echo "Enter client organization description"
 read projectdesc
 
-echo 'Which theme will this organization use? (1=Simple 2=Complex) : '
+#TO-DO Some error checking/recovery on user input here
+echo 'Which theme will this organization use? (1=Simple 2=Complex 3=Aggregator 4=Example) : '
 read theme
 
 
