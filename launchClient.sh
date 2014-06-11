@@ -4,7 +4,7 @@ echo "Enter client organization's name(lowercase):"
 read orgName
 
 
-echo "Have you committed all changes to git and created a production.ini file for this client?(y/n)"
+echo "Have you created a production.ini file, changed debug to false and committed all staging activity to git for this client?(y/n)"
 read confirmgit
 if [ ${confirmgit} = "n" ]
 then
