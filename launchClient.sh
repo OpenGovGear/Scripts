@@ -40,6 +40,7 @@ sudo chown `whoami` /etc/ckan/${orgName}
 #point the config file to the database server and make other customizations
 #specific to production server
 sudo cp ./${orgName}-staging/production.ini /etc/ckan/${orgName}/production.ini
+sudo sed -i "s/localhost\/${orgName}_db/${dbserv}\/${orgName}_db/" /etc/ckan/${orgName}/production.ini
 sudo ln -s /usr/lib/ckan/default/src/ckan/who.ini /etc/ckan/${orgName}/who.ini
 
 #install this client's extensions into the virtual environment
