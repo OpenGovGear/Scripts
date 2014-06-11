@@ -43,7 +43,7 @@ pip install -e 'git+https://github.com/ckan/ckan.git@ckan-2.2#egg=ckan'
 #Enable jetty and configure to serve internally
 cd /etc/default
 sudo sed -i 's/NO_START=1/NO_START=0/' jetty
-sudo sed -i "s/#JETTY_HOST=/JETTY_HOST=${ckanIP} #/" jetty
+sudo sed -i "s/#JETTY_HOST=/JETTY_HOST=0.0.0.0 #/" jetty
 sudo sed -i 's/#JETTY_PORT=8080/JETTY_PORT=8983/' jetty
 sudo sed -i 's/#JAVA_HOME=/JAVA_HOME=\/usr\/lib\/jvm\/java-6-openjdk-amd64\//' jetty
 
