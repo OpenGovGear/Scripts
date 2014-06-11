@@ -102,6 +102,9 @@ git config credential.helper store
 echo "Enter client organization's name:"
 read orgName
 
+echo "Enter client organization's top level domain:"
+read tld
+
 echo "Enter client organization description"
 read projectdesc
 
@@ -131,6 +134,7 @@ sudo sed -i "s/ckan.site_id = default/ckan.site_id = ${orgName}/" development.in
 #site_title parameter, convert name to allcaps
 upperName=$(tr [a-z] [A-Z] <<< "$orgName")
 sudo sed -i "s/ckan.site_title = CKAN/ckan.site_title = ${upperName}/" development.ini
+sudo sed -i "s/ckan.site_url =/ckan.site_url = data.${orgName}.${tld}/" development.ini
 sudo sed -i "s/ckan.locales_offered/#ckan.locales_offered/" development.ini
 #activate solr
 sudo sed -i 's/#solr_url/solr_url/' development.ini
