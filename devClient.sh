@@ -131,6 +131,7 @@ sudo sed -i "s/ckan.site_id = default/ckan.site_id = ${orgName}/" development.in
 #site_title parameter, convert name to allcaps
 upperName=$(tr [a-z] [A-Z] <<< "$orgName")
 sudo sed -i "s/ckan.site_title = CKAN/ckan.site_title = ${upperName}/" development.ini
+sudo sed -i "s/ckan.locales_offered/#ckan.locales_offered/" development.ini
 #activate solr
 sudo sed -i 's/#solr_url/solr_url/' development.ini
 #activate file store
