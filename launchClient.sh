@@ -12,7 +12,7 @@ then
 	exit 1
 fi
 
-echo "Have you created the database user/schema and solr core for this client on the database server?(y/n)"
+echo "Have you created the database user and solr core for this client on the database server?(y/n)"
 read confirmdb
 if [ ${confirmdb} = "n" ]
 then
@@ -43,9 +43,13 @@ sudo cp ./${orgName}-staging/production.ini /etc/ckan/${orgName}/production.ini
 sudo sed -i "s/localhost\/${orgName}_db/${dbserv}\/${orgName}_db/" /etc/ckan/${orgName}/production.ini
 sudo ln -s /usr/lib/ckan/default/src/ckan/who.ini /etc/ckan/${orgName}/who.ini
 
+#initialise the db
+. /usr/lib/ckan/default/bin/activate
+cd /usr/lib/ckan/default/src/ckan
+paster db init -c /etc/ckan/${orgName}/production.ini
+
 #install this client's extensions into the virtual environment
 sudo cp -r ./${orgName}-staging/ckanext-${orgName}_theme /usr/lib/ckan/default/src
-. /usr/lib/ckan/default/bin/activate
 cd /usr/lib/ckan/default/src/ckanext-${orgName}_theme
 python setup.py develop
 
