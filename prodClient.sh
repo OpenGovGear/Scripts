@@ -49,7 +49,7 @@ cd /usr/lib/ckan/default/src/ckan
 paster db init -c /etc/ckan/${orgName}/production.ini
 
 #install this client's extensions into the virtual environment
-sudo cp -r ./${orgName}-staging/ckanext-${orgName}_theme /usr/lib/ckan/default/src
+cp -r ./${orgName}-staging/ckanext-${orgName}_theme /usr/lib/ckan/default/src
 cd /usr/lib/ckan/default/src/ckanext-${orgName}_theme
 python setup.py develop
 
