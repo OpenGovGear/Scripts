@@ -33,8 +33,7 @@
 #sudo mkdir /FSTORE
 #sudo mount /dev/${volID} /FSTORE
 #################################################################################################
-echo "Have you created the ckan_default database user and schema with password on the database server?(y/n)"
-read confirmdb
+echo "Have you created the ckan_default database user and schema with password on the database server?(y/n)" | read confirmdb
 if [ ${confirmdb} = "n" ]
 then
 	echo 'Please create the database user, schema and password on the database server before continuing.'
