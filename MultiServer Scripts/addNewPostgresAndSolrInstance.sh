@@ -12,10 +12,13 @@ then
 fi
 
 # Variables
+echo "----------------------------"
 read -p "New User Name: " strUserName
 read -p "New Database Name: " strDataBaseName
-read -p "First Database Name (ckan_default if left blank): " strOldDataBaseName
+read -p "Origin Solr instance name (ckan_default if left blank): " strOldDataBaseName
 read -p "Listen Address for CKAN Server: " strCkanServerIP
+echo "----------------------------"
+
 if [ -z "$strOldDataBaseName" ]
 then
 	declare "strOldDataBaseName=ckan_default"
@@ -24,6 +27,7 @@ echo "New User Name: $strUserName"
 echo "New Database Name: $strDataBaseName"
 echo "First Database Name: $strOldDataBaseName"
 echo "CKAN Server IP: $strCkanServerIP"
+echo "----------------------------"
 echo -n "Is this correct?(y/n): "
 read blnReply
 if [ $blnReply == "n" ]
@@ -32,35 +36,41 @@ then
 	exit 1
 fi
 
-echo "Set up new SQL User and Database"
+#Set up new SQL User and Database"
 sudo -u postgres createuser -S -D -R -P ${strUserName}
 sudo -u postgres createdb -O ${strUserName} ${strDataBaseName} -E utf-8
 
 sudo grep -R "$strCkanServerIP" /etc/postgresql/9.1/main/postgresql.conf
 if [ $? -eq  1 ]
 then
-	sudo sed -i "s/#listen_addresses = 'localhost'/listen_addresses = 'localhost,$strCkanServerIP'/"  /etc/postgresql/9.1/main/postgresql.conf
+	sudo sed -i "s/#listen_addresses = '/listen_addresses = '$strCkanServerIP,/"  /etc/postgresql/9.1/main/postgresql.conf
 fi
 	
 sudo grep -R "$strCkanServerIP" /etc/postgresql/9.1/main/pg_hba.conf
 if [ $? -eq  1 ]
 then
-    sudo echo "host    all             all             $strCkanServerIP/32                 md5" >> /etc/postgresql/9.1/main/pg_hba.conf
+    sudo echo "host    all             all             ${strCkanServerIP}/32                 md5" >> /etc/postgresql/9.1/main/pg_hba.conf
 fi
 
-echo "Setting up SOLR"
-echo "Adding Second Core to solr.xml."
-strContent='<core name="$strDataBaseName" instanceDir="$strDataBaseName"><property name="dataDir" value="/var/lib/solr/data/$strDataBaseName" /></core>'
+#Setting up SOLR"
+#Adding Second Core to solr.xml."
+strContent='<core name="'
+strContent+="$strDataBaseName"
+strContent+='" instanceDir="'
+strContent+="${strDataBaseName}"
+strContent+='"><property name="dataDir" value="/var/lib/solr/data/'
+strContent+="${strDataBaseName}"
+strContent+='" /></core>'
+
 C=$(echo $strContent | sed 's/\//\\\//g')
 sudo sed -i "/<\/cores>/ s/.*/${C}\n&/" /usr/share/solr/solr.xml
-echo "Creating the data directory for your new core."
+#Creating the data directory for your new core."
 sudo -u jetty mkdir /var/lib/solr/data/$strDataBaseName
-echo "Creating the configuration directory for your new core, and copy the config from your first core into it"
+#Creating the configuration directory for your new core, and copy the config from your first core into it"
 sudo mkdir /etc/solr/$strDataBaseName
 sudo cp -R /etc/solr/$strOldDataBaseName/conf /etc/solr/$strDataBaseName/
-echo "Replacing the /etc/solr/my-second-solr-core/schema.xml file with a symlink to the schema.xml file from your second CKAN instance"
-#sudo mkdir /etc/solr/$strDataBaseName/conf/
-echo "Because CKAN is on a seperate server we need to create SOLR's Schema.xml. This script is using the 2.3 version, but it's been marked as 2.0 to stop errors"
+#Replacing the /etc/solr/my-second-solr-core/schema.xml file with a symlink to the schema.xml file from your second CKAN instance. 
+#CKAN is on a seperate server so we need to create SOLR's Schema.xml. This script is using the 2.3 version, but it's been marked as 2.0 to stop errors"
 sudo echo '<?xml version="1.0" encoding="UTF-8" ?>
 <!--
  Licensed to the Apache Software Foundation (ASF) under one or more
@@ -231,6 +241,6 @@ sudo echo '<?xml version="1.0" encoding="UTF-8" ?>
 <copyField source="author" dest="text"/>
 
 </schema>' > /etc/solr/${strDataBaseName}/conf/schema.xml
-echo "Restart Jetty"
 sudo service jetty restart
  
+echo "Done!"
