@@ -241,6 +241,10 @@ sudo echo '<?xml version="1.0" encoding="UTF-8" ?>
 <copyField source="author" dest="text"/>
 
 </schema>' > /etc/solr/${strDataBaseName}/conf/schema.xml
+
+sudo mkdir /usr/share/solr/${strDataBaseName}
+sudo ln -s /etc/solr/${strDataBaseName}/conf /usr/share/solr/${strDataBaseName}/conf
+
 sudo service jetty restart
  
 echo "Done!"
