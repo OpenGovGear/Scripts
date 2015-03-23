@@ -32,6 +32,18 @@ then
 	declare "strOldDataBaseName=ckan_default"
 fi
 
+#Exit if something is wrong (this is a short-circuit)
+if [ -z "$strUserName" ] || [ -z "$strDataBaseName" ] || [ -z "$strCkanServerIP" ] || [ -z "$strOldDataBaseName" ]
+then
+	echo "This script will install a new Postgres and Solr instance."
+	echo "./<script name>.sh <parm1> <param2> <param3> <param4>"
+	echo "<param1> : User Name"
+	echo "<param2> : Data Base Name"
+	echo "<param3> : Address for Ckan Server"
+	echo "<param4> : Optional orinin install instance name (ckan_default) if left blank"
+	exit 1
+fi
+
 #Set up new SQL User and Database"
 sudo -u postgres createuser -S -D -R -P ${strUserName}
 sudo -u postgres createdb -O ${strUserName} ${strDataBaseName} -E utf-8

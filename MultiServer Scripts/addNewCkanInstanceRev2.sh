@@ -30,6 +30,18 @@ then
 	read -p "Serve with Paster at the end(y/n): " strPasterServe
 fi
 
+#Exit if something is wrong (this is a short-circuit)
+if [ -z "$strInstanceName" ] || [ -z "$strRemote" ] || [ -z "$strPass" ] || [ -z "$strPasterServe" ]
+then
+	echo "This script will install a new ckan instance."
+	echo "./<script name>.sh <parm1> <param2> <param3> <param4>"
+	echo "<param1> : Instance Name"
+	echo "<param2> : Postgres Server IP"
+	echo "<param3> : Postgres Server Password"
+	echo "<param4> : Serve with Paster at the end(y/n)"
+	exit 1
+fi
+
 #set up python virtual enviroment
 sudo mkdir -p /usr/lib/ckan/${strInstanceName}
 sudo chown `whoami` /usr/lib/ckan/${strInstanceName}

@@ -8,6 +8,15 @@ then
 	read -p "Instance Name: " strInstanceName
 fi
 
+#Exit if something is wrong
+if [ -z "$strInstanceName" ]
+then
+	echo "This script is for install and setup of Apache"
+	echo "./<script name>.sh <param1>"
+	echo "<param1> : Instance Name"
+	exit 1
+fi
+
 #Create a production.ini File
 sudo cp /etc/ckan/${strInstanceName}/development.ini /etc/ckan/${strInstanceName}/production.ini
 
