@@ -102,8 +102,8 @@ server {
 		   
 #Enable your CKAN site
 sudo a2ensite ${strInstanceName}
-sudo a2dissite ${strInstanceName}
-sudo rm -vi /etc/nginx/sites-enabled/${strInstanceName}
+sudo a2dissite default
+sudo rm -vi /etc/nginx/sites-enabled/default
 sudo ln -s /etc/nginx/sites-available/${strInstanceName} /etc/nginx/sites-enabled/${strInstanceName}
 sudo service apache2 reload
 sudo service nginx reload
