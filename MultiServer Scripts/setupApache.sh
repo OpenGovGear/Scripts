@@ -40,44 +40,33 @@ fileConfig(config_filepath)\n
 application = loadapp('config:%s' % config_filepath)"| sudo tee /etc/ckan/${strInstanceName}/apache.wsgi
 	
 #Create the Apache config file
-strApacheConf="<VirtualHost 127.0.0.1:8080> 
-				 ServerName "
-strApacheConf+="$strInstanceName"
-strApacheConf+=".ckanhosted.com 
-				 ServerAlias www."
-strApacheConf+="$strInstanceName"
-strApacheConf+=".ckanhosted.com 
-				 WSGIScriptAlias / /etc/ckan/"
-strApacheConf+="$strInstanceName"
-strApacheConf+="/apache.wsgi 
-			 WSGIPassAuthorization On 
-                
-			 WSGIDaemonProcess "
-strApacheConf+="$strInstanceName"
-strApacheConf+=" display-name="
-strApacheConf+="$strInstanceName"
-strApacheConf+=" processes=2 threads=15
-                
-			 WSGIProcessGroup "
-strApacheConf+="$strInstanceName
-                
-			 ErrorLog /var/log/apache2/"
-strApacheConf+="$strInstanceName"
-strApacheConf+=".error.log
-			 CustomLog /var/log/apache2/"
-strApacheConf+="$strInstanceName"
-strApacheConf+=".custom.log combined
-				<IfModule mod_rpaf.c>
-				 		RPAFenable On
-				 		RPAFsethostname On
-				 		RPAFproxy_ips 127.0.0.1
-				 	</IfModule>
-				 </VirtualHost>"
+strApacheConf="<VirtualHost 127.0.0.1:8080>
+    ServerName default.ckanhosted.com
+    ServerAlias www.default.ckanhosted.com
+    WSGIScriptAlias / /etc/ckan/default/apache.wsgi
+
+    # Pass authorization info on (needed for rest api).
+    WSGIPassAuthorization On
+
+    # Deploy as a daemon (avoids conflicts between CKAN instances).
+    WSGIDaemonProcess ckan_default display-name=ckan_default processes=2 threads=15
+
+    WSGIProcessGroup ckan_default
+
+    ErrorLog /var/log/apache2/ckan_default.error.log
+    CustomLog /var/log/apache2/ckan_default.custom.log combined
+
+    <IfModule mod_rpaf.c>
+        RPAFenable On
+        RPAFsethostname On
+        RPAFproxy_ips 127.0.0.1
+    </IfModule>
+</VirtualHost>"
 sudo echo $strApacheConf | sudo tee /etc/apache2/sites-available/${strInstanceName}
 
 #Modify the Apache ports.conf file
-sudo sed -i "s/NameVirtualHost \*\:80/NameVirtualHost *:8080/" /etc/ckan/${strInstanceName}/development.ini 
-sudo sed -i "s/Listen 80/Listen 8080/" /etc/ckan/${strInstanceName}/development.ini 
+sudo sed -i "s/NameVirtualHost \*\:80/NameVirtualHost \*\:8080/" /etc/apache2/ports.conf
+sudo sed -i "s/Listen 80/Listen 8080/" /etc/apache2/ports.conf
 
 #Create the Nginx config file
 sudo echo "proxy_cache_path /tmp/nginx_cache levels=1:2 keys_zone=cache:30m max_size=250m;
