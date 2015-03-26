@@ -40,33 +40,32 @@ fileConfig(config_filepath)\n
 application = loadapp('config:%s' % config_filepath)"| sudo tee /etc/ckan/${strInstanceName}/apache.wsgi
 	
 #Create the Apache config file
-strApacheConf="<VirtualHost 127.0.0.1:8080>
-    ServerName ${strInstanceName}.opengovgear.com
-    ServerAlias www.${strInstanceName}.opengovegear.com
-    WSGIScriptAlias / /etc/ckan/${strInstanceName}/apache.wsgi
-
+echo="<VirtualHost 127.0.0.1:8080> 
+    ServerName ${strInstanceName}.opengovgear.com 
+    ServerAlias www.${strInstanceName}.opengovegear.com 
+    WSGIScriptAlias / /etc/ckan/${strInstanceName}/apache.wsgi 
+	
     # Pass authorization info on (needed for rest api).
-    WSGIPassAuthorization On
+    WSGIPassAuthorization On 
 
     # Deploy as a daemon (avoids conflicts between CKAN instances).
-    WSGIDaemonProcess ${strInstanceName} display-name=${strInstanceName} processes=2 threads=15
-
-    WSGIProcessGroup ${strInstanceName}
-
-    ErrorLog /var/log/apache2/${strInstanceName}.error.log
-    CustomLog /var/log/apache2/${strInstanceName}.custom.log combined
-
-    <IfModule mod_rpaf.c>
+    WSGIDaemonProcess ${strInstanceName} display-name=${strInstanceName} processes=2 threads=15 
+	
+    WSGIProcessGroup ${strInstanceName} 
+	
+    ErrorLog /var/log/apache2/${strInstanceName}.error.log 
+    CustomLog /var/log/apache2/${strInstanceName}.custom.log combined 
+	
+    <IfModule mod_rpaf.c> 
         RPAFenable On
-        RPAFsethostname On
-        RPAFproxy_ips 127.0.0.1
-    </IfModule>
-</VirtualHost>"
-sudo echo $strApacheConf | sudo tee /etc/apache2/sites-available/${strInstanceName}
+        RPAFsethostname On 
+        RPAFproxy_ips 127.0.0.1 
+    </IfModule> 
+</VirtualHost>" | sudo tee /etc/apache2/sites-available/${strInstanceName}
 
 #Modify the Apache ports.conf file
-sudo sed -i "s/NameVirtualHost \*\:80/NameVirtualHost \*\:8080/" /etc/apache2/ports.conf
-sudo sed -i "s/Listen 80/Listen 8080/" /etc/apache2/ports.conf
+sudo sed -i "s/NameVirtualHost \*\:80 /NameVirtualHost \*\:8080/" /etc/apache2/ports.conf
+sudo sed -i "s/Listen 80 /Listen 8080/" /etc/apache2/ports.conf
 
 #Create the Nginx config file
 sudo echo "proxy_cache_path /tmp/nginx_cache levels=1:2 keys_zone=cache:30m max_size=250m;
