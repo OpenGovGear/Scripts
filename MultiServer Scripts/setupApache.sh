@@ -21,12 +21,12 @@ fi
 sudo cp /etc/ckan/${strInstanceName}/development.ini /etc/ckan/${strInstanceName}/production.ini
 
 #Install Apache, modwsgi, modrpaf, Nginx
-sudo apt-get update
-sudo apt-get install apache2 libapache2-mod-wsgi libapache2-mod-rpaf
-sudo apt-get install nginx
+sudo apt-get update -y
+sudo apt-get install -y apache2 libapache2-mod-wsgi libapache2-mod-rpaf
+sudo apt-get install -y nginx
 
 #Install an email server
-sudo apt-get install postfix
+sudo apt-get install -y postfix
 
 #Create the WSGI script file
 sudo echo -e "import os\n 
@@ -41,20 +41,20 @@ application = loadapp('config:%s' % config_filepath)"| sudo tee /etc/ckan/${strI
 	
 #Create the Apache config file
 strApacheConf="<VirtualHost 127.0.0.1:8080>
-    ServerName default.ckanhosted.com
-    ServerAlias www.default.ckanhosted.com
+    ServerName ${strInstanceName}.opengovgear.com
+    ServerAlias www.${strInstanceName}.opengovegear.com
     WSGIScriptAlias / /etc/ckan/default/apache.wsgi
 
     # Pass authorization info on (needed for rest api).
     WSGIPassAuthorization On
 
     # Deploy as a daemon (avoids conflicts between CKAN instances).
-    WSGIDaemonProcess ckan_default display-name=ckan_default processes=2 threads=15
+    WSGIDaemonProcess ${strInstanceName} display-name=${strInstanceName} processes=2 threads=15
 
-    WSGIProcessGroup ckan_default
+    WSGIProcessGroup ${strInstanceName}
 
-    ErrorLog /var/log/apache2/ckan_default.error.log
-    CustomLog /var/log/apache2/ckan_default.custom.log combined
+    ErrorLog /var/log/apache2/${strInstanceName}.error.log
+    CustomLog /var/log/apache2/${strInstanceName}.custom.log combined
 
     <IfModule mod_rpaf.c>
         RPAFenable On
