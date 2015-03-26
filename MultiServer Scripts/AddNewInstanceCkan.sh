@@ -145,7 +145,7 @@ then
 			   }" | sudo tee /etc/nginx/sites-available/${strInstanceName}.opengovgear.com 
 			   
 	#Enable your CKAN site
-	sudo a2ensite ${strInstanceName}
+	sudo a2ensite ${strInstanceName}.opengovgear.com
 	sudo a2dissite default
 	sudo rm -vi /etc/nginx/sites-enabled/default
 	sudo ln -s /etc/nginx/sites-available/${strInstanceName}.opengovgear.com  /etc/nginx/sites-enabled/${strInstanceName}.opengovgear.com 
