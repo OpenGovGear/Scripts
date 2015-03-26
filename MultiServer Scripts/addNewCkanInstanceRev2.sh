@@ -60,8 +60,9 @@ sudo chown -R `whoami` /etc/ckan/
 cd /usr/lib/ckan/${strInstanceName}/src/ckan
 paster make-config ckan /etc/ckan/${strInstanceName}/development.ini
 
-sudo sed -i "s/pass\@localhost/${strPass}\@${strRemote}/" /etc/ckan/${strInstanceName}/development.ini 
-
+#Format sqlalchamy url
+# sqlalchemy.url = postgresql://ckan_default:pass@localhost/ckan_default
+sudo sed -i "s/ckan_default\:pass\@localhost\/ckan_default/${strInstanceName}\:{$strPass}\@${strRemote}\/${strInstanceName}/" /etc/ckan/${strInstanceName}/development.ini 
 sudo sed -i "s/ckan.site_id = default/ckan.site_id = ${strInstanceName}/" /etc/ckan/${strInstanceName}/development.ini # ckan.site_id = default
 sudo sed -i "s/#solr_url = http:\/\/127.0.0.1:8983\/solr/solr_url = http:\/\/${strRemote}:8983\/solr\/${strInstanceName}/" /etc/ckan/${strInstanceName}/development.ini # #solr_url = http://127.0.0.1:8983/solr
 
