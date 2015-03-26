@@ -98,7 +98,7 @@ then
 	#Create the Apache config file
 	echo="<VirtualHost 127.0.0.1:8080> 
 		ServerName ${strInstanceName}.opengovgear.com 
-		ServerAlias www.${strInstanceName}.opengovegear.com 
+		ServerAlias www.${strInstanceName}.opengovgear.com 
 		WSGIScriptAlias / /etc/ckan/${strInstanceName}/apache.wsgi 
 		
 		# Pass authorization info on (needed for rest api).
@@ -117,7 +117,7 @@ then
 			RPAFsethostname On 
 			RPAFproxy_ips 127.0.0.1 
 		</IfModule> 
-	</VirtualHost>" | sudo tee /etc/apache2/sites-available/${strInstanceName}
+	</VirtualHost>" | sudo tee /etc/apache2/sites-available/${strInstanceName}.opengovgear.com 
 
 	#Modify the Apache ports.conf file
 	sudo sed -i "s/NameVirtualHost \*\:80 /NameVirtualHost \*\:8080/" /etc/apache2/ports.conf
@@ -142,13 +142,13 @@ then
 			# proxy_ignore_headers X-Accel-Expires Expires Cache-Control;
 	}
 				  
-			   }" | sudo tee /etc/nginx/sites-available/${strInstanceName}
+			   }" | sudo tee /etc/nginx/sites-available/${strInstanceName}.opengovgear.com 
 			   
 	#Enable your CKAN site
 	sudo a2ensite ${strInstanceName}
 	sudo a2dissite default
 	sudo rm -vi /etc/nginx/sites-enabled/default
-	sudo ln -s /etc/nginx/sites-available/${strInstanceName} /etc/nginx/sites-enabled/${strInstanceName}
+	sudo ln -s /etc/nginx/sites-available/${strInstanceName}.opengovgear.com  /etc/nginx/sites-enabled/${strInstanceName}.opengovgear.com 
 	sudo service apache2 reload
 	sudo service nginx reload
 fi
