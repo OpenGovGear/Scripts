@@ -43,7 +43,7 @@ application = loadapp('config:%s' % config_filepath)"| sudo tee /etc/ckan/${strI
 strApacheConf="<VirtualHost 127.0.0.1:8080>
     ServerName ${strInstanceName}.opengovgear.com
     ServerAlias www.${strInstanceName}.opengovegear.com
-    WSGIScriptAlias / /etc/ckan/default/apache.wsgi
+    WSGIScriptAlias / /etc/ckan/${strInstanceName}/apache.wsgi
 
     # Pass authorization info on (needed for rest api).
     WSGIPassAuthorization On
