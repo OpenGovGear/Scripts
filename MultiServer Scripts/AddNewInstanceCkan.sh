@@ -66,6 +66,8 @@ sudo sed -i "s/ckan_default\:pass\@localhost\/ckan_default/${strInstanceName}\:{
 sudo sed -i "s/ckan.site_id = default/ckan.site_id = ${strInstanceName}/" /etc/ckan/${strInstanceName}/development.ini # ckan.site_id = default
 sudo sed -i "s/#solr_url = http:\/\/127.0.0.1:8983\/solr/solr_url = http:\/\/${strRemote}:8983\/solr\/${strInstanceName}/" /etc/ckan/${strInstanceName}/development.ini # #solr_url = http://127.0.0.1:8983/solr
 
+#Set title
+sudo sed -i "s/title = CKAN/title = ${strInstanceName}/" /etc/ckan/${strInstanceName}/development.ini
 cd /usr/lib/ckan/${strInstanceName}/src/ckan
 paster db init -c /etc/ckan/${strInstanceName}/development.ini
 
@@ -85,18 +87,11 @@ then
 	sudo apt-get install -y postfix
 
 	#Create the WSGI script file
-	sudo echo -e "import os\n 
-	activate_this = os.path.join('/usr/lib/ckan/$strInstanceName/bin/activate_this.py')\n 
-	execfile(activate_this, dict(__file__=activate_this))\n 
-					  
-	from paste.deploy import loadapp\n 
-	config_filepath = os.path.join(os.path.dirname(os.path.abspath(__file__)), 'production.ini')\n 
-	from paste.script.util.logging_config import fileConfig\n 
-	fileConfig(config_filepath)\n 
-	application = loadapp('config:%s' % config_filepath)"| sudo tee /etc/ckan/${strInstanceName}/apache.wsgi
+	sudo cp /etc/ckan/default/apache.wsgi /etc/ckan/${strInstanceName}/apache.wsgi
+        sudo sed -i "s/default/$strInstanceName/" /etc/ckan/${strInstanceName}/apache.wsgi
 		
 	#Create the Apache config file
-	echo="<VirtualHost 127.0.0.1:8080> 
+	echo "<VirtualHost *:8080> 
 		ServerName ${strInstanceName}.opengovgear.com 
 		ServerAlias www.${strInstanceName}.opengovgear.com 
 		WSGIScriptAlias / /etc/ckan/${strInstanceName}/apache.wsgi 
@@ -142,13 +137,13 @@ then
 			# proxy_ignore_headers X-Accel-Expires Expires Cache-Control;
 	}
 				  
-			   }" | sudo tee /etc/nginx/sites-available/${strInstanceName}.opengovgear.com 
+			   }" | sudo tee /etc/nginx/sites-available/ckan.opengovgear.com 
 			   
 	#Enable your CKAN site
 	sudo a2ensite ${strInstanceName}.opengovgear.com
 	sudo a2dissite default
 	sudo rm -vi /etc/nginx/sites-enabled/default
-	sudo ln -s /etc/nginx/sites-available/${strInstanceName}.opengovgear.com  /etc/nginx/sites-enabled/${strInstanceName}.opengovgear.com 
+	sudo ln -s /etc/nginx/sites-available/ckan.opengovgear.com  /etc/nginx/sites-enabled/ckan.opengovgear.com 
 	sudo service apache2 reload
 	sudo service nginx reload
 fi
