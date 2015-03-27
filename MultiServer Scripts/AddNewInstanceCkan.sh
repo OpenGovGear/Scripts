@@ -43,15 +43,8 @@ then
 fi
 
 #set up python virtual enviroment
-sudo mkdir -p /usr/lib/ckan/${strInstanceName}
+cp /usr/lib/ckan/default /usr/lib/ckan/${strInstanceName}
 sudo chown `whoami` /usr/lib/ckan/${strInstanceName}
-virtualenv --no-site-packages /usr/lib/ckan/${strInstanceName}
-. /usr/lib/ckan/${strInstanceName}/bin/activate
-
-#Install CKAN source
-pip install -e 'git+https://github.com/ckan/ckan.git@ckan-2.3#egg=ckan'
-pip install -r /usr/lib/ckan/${strInstanceName}/src/ckan/requirements.txt
-deactivate
 . /usr/lib/ckan/${strInstanceName}/bin/activate
 
 #Create a CKAN Config File
