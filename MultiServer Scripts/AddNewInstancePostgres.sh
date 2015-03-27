@@ -78,7 +78,7 @@ sudo -u jetty mkdir /var/lib/solr/data/$strDataBaseName
 sudo mkdir /etc/solr/$strDataBaseName
 sudo cp -R /etc/solr/$strOldDataBaseName/conf /etc/solr/$strDataBaseName/
 #Replacing the /etc/solr/my-second-solr-core/schema.xml file with a symlink to the schema.xml file from your second CKAN instance. 
-#CKAN is on a seperate server so we need to create SOLR's Schema.xml. This script is using the 2.3 version, but it's been marked as 2.0 to stop errors"
+#CKAN is on a seperate server so we need to create SOLR's Schema.xml.
 sudo echo '<?xml version="1.0" encoding="UTF-8" ?>
 <!--
  Licensed to the Apache Software Foundation (ASF) under one or more
@@ -97,7 +97,7 @@ sudo echo '<?xml version="1.0" encoding="UTF-8" ?>
  limitations under the License.
 -->
 
-<schema name="ckan" version="2.0">
+<schema name="ckan" version="2.3">
 
 <types>
     <fieldType name="string" class="solr.StrField" sortMissingLast="true" omitNorms="true"/>
